@@ -3,16 +3,13 @@
 
 Run in this order as apps depend on eachother and will fail if services are not fully started.
 
-install node version 16.14.0
-
+This repository requires 16.14.0.
+This repository should be checkouted beside with monorepo repository
 
 ```bash
-cd certs
-openssl req -x509 -sha256 -nodes -newkey rsa:2048 -days 365 -keyout localhost.key -out localhost.crt
-cd ..
-yarn
-yarn serve:dashboard
-yarn serve:public
+./init.sh yarn
+# Terminal 1
+./run.sh "yarn serve:dashboard"
+# Terminal 2
+./run.sh "yarn serve:public"
 ```
-
-copy certs files in the certs folder in monorepo
