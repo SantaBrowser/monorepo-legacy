@@ -80,3 +80,7 @@ docker/data/**/*
 # Playwright
 playwright-report
 test-results
+
+# Logs
+dashboard.log 
+public.log 
