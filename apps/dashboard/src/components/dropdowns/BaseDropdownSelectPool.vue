@@ -11,12 +11,7 @@
                 <div v-if="pool">{{ pool.settings.title }}</div>
                 <div v-else>Select a pool</div>
             </template>
-            <b-dropdown-item-button
-                :key="p.safe.address"
-                v-for="p of poolsPerChain"
-                :disabled="p.settings.isArchived"
-                @click="onListItemClick(p)"
-            >
+            <b-dropdown-item-button :key="p.safe.address" v-for="p of poolsPerChain" @click="onListItemClick(p)">
                 {{ p.settings.title }}
             </b-dropdown-item-button>
         </b-dropdown>
@@ -28,7 +23,7 @@
 import { Component, Prop, Vue } from 'vue-property-decorator';
 import { mapGetters } from 'vuex';
 import { IPools } from '../../store/modules/pools';
-import { ChainId } from '@thxnetwork/dashboard/types/enums/ChainId';
+import { ChainId } from '@thxnetwork/common/enums';
 import BaseIdenticon from '../BaseIdenticon.vue';
 import BaseFormSelectNetwork from '../form-select/BaseFormSelectNetwork.vue';
 

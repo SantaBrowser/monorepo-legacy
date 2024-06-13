@@ -1,5 +1,5 @@
 <template>
-    <base-modal :loading="loading" :error="error" title="Create Coin" id="modalERC20Create">
+    <base-modal :error="error" title="Create Coin" id="modalERC20Create">
         <template #modal-body v-if="!loading">
             <base-form-select-network @selected="selectedChainId = $event" :chainId="selectedChainId" />
             <b-form-group label="Variant">
@@ -46,7 +46,7 @@
 </template>
 
 <script lang="ts">
-import { ChainId } from '@thxnetwork/dashboard/types/enums/ChainId';
+import { ChainId } from '@thxnetwork/common/enums';
 import { ERC20Type, TERC20 } from '@thxnetwork/dashboard/types/erc20';
 import { Component, Prop, Vue } from 'vue-property-decorator';
 import { mapGetters } from 'vuex';

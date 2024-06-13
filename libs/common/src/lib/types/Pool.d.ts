@@ -41,6 +41,10 @@ type TPool = {
     createdAt: Date;
     trialEndsAt: Date;
     balance: string;
+    author: {
+        username: string;
+    };
+    participantCount: number;
 };
 
 type TPoolSettings = {
@@ -49,7 +53,6 @@ type TPoolSettings = {
     description: string;
     startDate: Date;
     endDate?: Date;
-    isArchived: boolean;
     isPublished: boolean;
     isWeeklyDigestEnabled: boolean;
     isTwitterSyncEnabled: boolean;

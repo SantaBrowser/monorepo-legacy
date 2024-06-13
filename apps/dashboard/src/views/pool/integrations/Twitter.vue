@@ -11,14 +11,11 @@
                     <strong>Quest Automation</strong>
                 </div>
                 <p class="text-muted">
-                    Runs a search for posts that match your requirements and create unpublished Repost & Like quests.
+                    Automatically create Repost & Like quests for posts on Twitter that match your requirements.
                 </p>
                 <ul class="text-muted">
-                    <li>Search runs daily</li>
-                    <li>Search runs when query is added</li>
-                    <li>New quests are unpublished by default</li>
-                    <li>Matched post are sorted by recency</li>
-                    <li>Max. 10 posts are matched per search</li>
+                    <li>Results are sorted by recency</li>
+                    <li>Up to 10 quests are created per search</li>
                 </ul>
             </b-col>
             <b-col md="8">
@@ -37,6 +34,7 @@
                     </template>
                     <BTable :items="queries" hover show-empty responsive="lg">
                         <template #head(queryString)>Query</template>
+                        <template #head(frequency)>Repeat (hours)</template>
                         <template #head(createdAt)>Created</template>
                         <template #head(query)> &nbsp; </template>
                         <template #cell(queryString)="{ item }">
@@ -46,6 +44,9 @@
                             <small class="text-muted">
                                 {{ format(new Date(item.createdAt), 'dd-MM-yyyy HH:mm') }}
                             </small>
+                        </template>
+                        <template #cell(frequency)="{ item }">
+                            <i class="fas fa-repeat text-muted mr-2"></i>{{ item.frequency }}
                         </template>
                         <template #cell(query)="{ item }">
                             <b-dropdown variant="link" size="sm" right no-caret>
@@ -62,10 +63,6 @@
                         </template>
                     </BTable>
                 </b-form-group>
-                <b-button variant="link" :to="`/pool/${pool._id}/quests?isPublished=false`" class="rounded-pill">
-                    Unpublished Quests
-                    <i class="fas fa-chevron-right ml-2" />
-                </b-button>
             </b-col>
         </b-form-row>
     </div>
@@ -119,6 +116,7 @@ export default class IntegrationTwitterView extends Vue {
         return Object.values(this.twitterQueryList[this.$route.params.id]).map((query) => {
             return {
                 queryString: query.query,
+                frequency: query.frequencyInHours,
                 posts: query.posts.length,
                 createdAt: query.createdAt,
                 query,

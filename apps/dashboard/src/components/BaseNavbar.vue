@@ -5,61 +5,74 @@
         id="sidebar-left"
         no-header
         no-header-close
+        no-close-on-esc
         no-close-on-route-change
         no-slide
         :visible="true"
     >
         <b-navbar toggleable="lg" class="sidebar">
-            <div class="d-flex align-items-center justify-content-between w-100 pt-3 px-3">
-                <b-link v-if="selectedPool" :to="`/pool/${selectedPool._id}/settings`">
-                    <b-img-lazy style="max-height: 40px; max-width: 120px" :src="selectedPoolLogoImg" />
-                </b-link>
-                <b-dropdown size="sm" variant="link" right no-caret toggle-class="py-3" menu-class="pb-0">
-                    <template #button-content>
-                        <i v-if="selectedPool" class="fas fa-ellipsis-v text-muted m-0" style="font-size: 1.1rem" />
-                        <b-spinner v-else variant="primary" small />
-                    </template>
-                    <div style="max-height: 300px; overflow: auto">
-                        <b-dropdown-item-btn
-                            class="small"
-                            :key="key"
-                            v-for="(p, key) of pools"
-                            @click="onPoolSelect(p)"
-                        >
-                            <div class="text-left d-flex align-items-center justify-content-between">
-                                <div class="align-items-center d-flex">
-                                    <span class="truncate-pool-title">
-                                        {{ p.settings.title }}
-                                    </span>
-                                    <i class="fas fa-caret-right text-muted ml-2"></i>
-                                </div>
-                            </div>
-                        </b-dropdown-item-btn>
-                        <b-dropdown-text>
-                            <b-button
-                                v-b-modal="'modalCreateCampaign'"
-                                variant="primary"
-                                size="sm"
-                                block
-                                class="rounded-pill"
-                            >
-                                <i class="fas fa-plus mr-1 ml-0" />
-                                Campaign
-                            </b-button>
-                            <BaseModalPoolCreate id="modalCreateCampaign" />
-                        </b-dropdown-text>
-                    </div>
-                </b-dropdown>
-            </div>
             <div class="flex-grow-1 w-100 h-25 overflow-auto d-flex justify-content-end flex-column">
-                <b-button class="d-flex p-2 m-3 text-muted" variant="light" v-if="selectedPool" @click="onClickPreview">
-                    <div class="truncate-pool-title flex-grow-1 pl-2">
-                        {{ selectedPool.settings.title }}
-                    </div>
-                    <div class="flex-grow-0" v-b-tooltip.top.hover title="Preview campaign">
+                <b-form-group class="my-3 mx-2">
+                    <b-button-group class="w-100">
+                        <b-button
+                            v-if="selectedPool"
+                            class="d-flex p-2 text-muted align-items-center"
+                            variant="light"
+                            @click="onClickCampaignURL"
+                        >
+                            <b-img-lazy style="max-height: 20px; max-width: 20px" :src="selectedPoolLogoImg" />
+                            <div class="truncate-pool-title flex-grow-1 pl-2">
+                                {{ selectedPool.settings.title }}
+                            </div>
+                        </b-button>
+                        <b-dropdown size="sm" variant="light" right no-caret>
+                            <template #button-content>
+                                <i
+                                    v-if="selectedPool"
+                                    class="fas fa-caret-down text-muted m-0"
+                                    style="font-size: 1.1rem"
+                                />
+                                <b-spinner v-else variant="primary" small />
+                            </template>
+                            <div style="max-height: 300px; overflow: auto">
+                                <b-dropdown-item-btn
+                                    class="small"
+                                    :key="key"
+                                    v-for="(p, key) of pools"
+                                    @click="onPoolSelect(p)"
+                                >
+                                    <div class="d-flex align-items-center justify-content-between">
+                                        <div class="d-flex align-items-center">
+                                            <span class="truncate-pool-title">
+                                                {{ p.settings.title }}
+                                            </span>
+                                            <i class="fas fa-caret-right text-muted ml-2"></i>
+                                        </div>
+                                    </div>
+                                </b-dropdown-item-btn>
+                                <b-dropdown-text>
+                                    <b-button
+                                        v-b-modal="'modalCreateCampaign'"
+                                        variant="primary"
+                                        size="sm"
+                                        block
+                                        class="rounded-pill"
+                                    >
+                                        <i class="fas fa-plus mr-1 ml-0" />
+                                        Campaign
+                                    </b-button>
+                                    <BaseModalPoolCreate id="modalCreateCampaign" />
+                                </b-dropdown-text>
+                            </div>
+                        </b-dropdown>
+                    </b-button-group>
+                </b-form-group>
+                <b-form-group class="mb-3 mx-2">
+                    <b-button variant="primary" @click="onClickCampaignURL" class="p-2 w-100">
+                        Campaign URL
                         <i class="fas fa-external-link-alt" />
-                    </div>
-                </b-button>
+                    </b-button>
+                </b-form-group>
                 <template v-if="selectedPool">
                     <b-navbar-nav class="py-0">
                         <b-nav-item
@@ -168,6 +181,7 @@
                             </div>
                         </b-nav-item>
                     </b-navbar-nav>
+
                     <hr />
                 </template>
                 <hr class="m-0 mt-auto" />
@@ -199,7 +213,7 @@ import { mapGetters } from 'vuex';
 import BaseNavbarNav from './BaseNavbarNav.vue';
 import BaseModalPoolCreate from '@thxnetwork/dashboard/components/modals/BaseModalPoolCreate.vue';
 import { AccountPlanType } from '@thxnetwork/common/enums';
-import { BASE_URL } from '@thxnetwork/dashboard/config/secrets';
+import { BASE_URL, WIDGET_URL } from '@thxnetwork/dashboard/config/secrets';
 
 @Component({
     components: {
@@ -273,9 +287,9 @@ export default class BaseNavbar extends Vue {
         });
     }
 
-    onClickPreview() {
+    onClickCampaignURL() {
         if (!this.selectedPool) return;
-        window.open(BASE_URL + '/preview/' + this.selectedPool._id, '_blank');
+        window.open(WIDGET_URL + '/c/' + this.selectedPool.settings.slug, '_blank');
     }
 
     async onPoolSelect(pool: TPool) {

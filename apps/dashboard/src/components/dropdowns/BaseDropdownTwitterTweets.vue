@@ -1,7 +1,11 @@
 <template>
     <div>
         <BaseFormGroupTwitterFollowersMin :amount="minFollowersCount" @input="onInputFollowersMin" />
-        <b-form-group label="Tweet URL">
+        <BaseFormGroup
+            required
+            label="Post URL"
+            tooltip="We will validate if the campaign participant has completed the required interactions for this post."
+        >
             <b-input-group>
                 <b-form-input
                     debounce="1000"
@@ -28,7 +32,7 @@
                 <i class="fas fa-info-circle mr-1" />
                 {{ error }}
             </b-alert>
-        </b-form-group>
+        </BaseFormGroup>
     </div>
 </template>
 
@@ -93,7 +97,8 @@ export default class BaseDropdownTwitterTweets extends Vue {
         if (!this.isValidTweetUrl) return '';
 
         const url = new URL(this.url);
-        const urlParts = url.pathname.split('/');
+        const pathname = url.pathname.replace(/\/+$/, ''); // Remove trailing slash if there is one
+        const urlParts = pathname.split('/');
         const tweetId = urlParts[urlParts.length - 1];
         if (!tweetId) return '';
 
