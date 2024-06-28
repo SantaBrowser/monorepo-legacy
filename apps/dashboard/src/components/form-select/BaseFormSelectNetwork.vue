@@ -52,7 +52,7 @@ export default class BaseFormSelectNetwork extends Vue {
     publicUrl = PUBLIC_URL;
     chainInfo = chainInfo;
     profile!: TAccount;
-    currentChainId = ChainId.Polygon;
+    currentChainId = ChainId.Sepolia;
 
     created() {
         if (this.chainId) this.currentChainId = this.chainId;

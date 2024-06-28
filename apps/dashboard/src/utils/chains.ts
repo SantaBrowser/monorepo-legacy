@@ -9,6 +9,13 @@ const chainInfo: { [chainId: number]: ChainInfo } = {
         logo: require('@thxnetwork/dashboard/../public/assets/thx_logo_ethereum.svg'),
         blockExplorer: 'https://mumbai.polygonscan.com',
     },
+    [ChainId.Sepolia]: {
+        disabled: false,
+        chainId: ChainId.Sepolia,
+        name: 'Sepolia',
+        logo: require('@thxnetwork/dashboard/../public/assets/thx_logo_ethereum.svg'),
+        blockExplorer: 'https://sepolia.etherscan.io',
+    },
     [ChainId.Arbitrum]: {
         disabled: true,
         chainId: ChainId.Arbitrum,
@@ -24,28 +31,28 @@ const chainInfo: { [chainId: number]: ChainInfo } = {
         blockExplorer: 'https://mumbai.polygonscan.com',
     },
     [ChainId.Polygon]: {
-        disabled: false,
+        disabled: true,
         chainId: ChainId.Polygon,
         name: 'Polygon',
         logo: require('@thxnetwork/dashboard/../public/assets/thx_logo_polygon.svg'),
         blockExplorer: 'https://polygonscan.com',
     },
     [ChainId.PolygonZK]: {
-        disabled: false,
+        disabled: true,
         chainId: ChainId.PolygonZK,
         name: 'Polygon zkEVM',
         logo: require('@thxnetwork/dashboard/../public/assets/thx_logo_polygon.svg'),
         blockExplorer: 'https://zkevm.polygonscan.com',
     },
     [ChainId.Linea]: {
-        disabled: false,
+        disabled: true,
         chainId: ChainId.Linea,
         name: 'Linea',
         logo: require('@thxnetwork/dashboard/../public/assets/thx_logo_linea.svg'),
         blockExplorer: 'https://lineascan.build',
     },
     [ChainId.Metis]: {
-        disabled: false,
+        disabled: true,
         chainId: ChainId.Metis,
         name: 'Metis',
         logo: require('@thxnetwork/dashboard/../public/assets/thx_logo_metis.svg'),
@@ -55,7 +62,7 @@ const chainInfo: { [chainId: number]: ChainInfo } = {
 
 if (process.env.NODE_ENV !== 'production') {
     chainInfo[ChainId.Hardhat] = {
-        disabled: false,
+        disabled: true,
         chainId: ChainId.Hardhat,
         name: 'Hardhat',
         logo: require('@thxnetwork/dashboard/../public/assets/thx_logo_hardhat.svg'),

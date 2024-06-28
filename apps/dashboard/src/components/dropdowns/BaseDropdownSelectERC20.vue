@@ -29,7 +29,7 @@
         <b-dropdown-item-button
             :key="erc20.address"
             v-for="erc20 of tokenList"
-            :disabled="chainId !== ChainId.Polygon"
+            :disabled="chainId !== ChainId.Sepolia"
             @click="$emit('update', erc20)"
         >
             <img :src="erc20.logoURI" width="20" class="mr-3" :alt="erc20.name" />

@@ -70,7 +70,7 @@ export default class ModalERC20Create extends Vue {
 
     tokenType = ERC20Type.Unlimited;
     tokenList: TERC20[] = [];
-    selectedChainId: ChainId = ChainId.Polygon;
+    selectedChainId: ChainId = ChainId.Sepolia;
 
     erc20Token: TERC20 | null = null;
     erc20TokenAddress = '';

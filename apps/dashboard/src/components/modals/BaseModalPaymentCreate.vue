@@ -172,7 +172,7 @@ export default class BaseModalPaymentCreate extends Vue {
     get allowanceInWei() {
         if (!this.erc20AllowanceList[this.addresses.USDC]) return '';
         if (!this.erc20AllowanceList[this.addresses.USDC][this.pool.safeAddress]) return '';
-        return this.erc20AllowanceList[this.addresses.USDC][this.pool.safeAddress][this.addresses.THXPaymentSplitter];
+        return this.erc20AllowanceList[this.addresses.USDC][this.pool.safeAddress]['0x000'];
     }
 
     get balanceInUSD() {
@@ -197,7 +197,7 @@ export default class BaseModalPaymentCreate extends Vue {
         await this.$store.dispatch('erc20/allowance', {
             pool: this.pool,
             tokenAddress: this.addresses.USDC,
-            spender: this.addresses.THXPaymentSplitter,
+            spender: '0x000',
         });
     }
 
@@ -205,7 +205,7 @@ export default class BaseModalPaymentCreate extends Vue {
         await this.$store.dispatch('erc20/approve', {
             pool: this.pool,
             tokenAddress: this.addresses.USDC,
-            spender: this.addresses.THXPaymentSplitter,
+            spender: '0x000',
             amountInWei: ethers.constants.MaxUint256.toString(),
         });
     }

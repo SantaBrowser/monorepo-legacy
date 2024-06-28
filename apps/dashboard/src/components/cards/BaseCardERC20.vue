@@ -79,6 +79,7 @@ export default class BaseCardERC20 extends Vue {
             this.isDeploying = false;
             this.isLoading = false;
         }
+        console.log(this.erc20);
     }
 
     openTokenUrl() {
