@@ -62,7 +62,7 @@ const chainInfo: { [chainId: number]: ChainInfo } = {
 
 if (process.env.NODE_ENV !== 'production') {
     chainInfo[ChainId.Hardhat] = {
-        disabled: true,
+        disabled: false,
         chainId: ChainId.Hardhat,
         name: 'Hardhat',
         logo: require('@thxnetwork/dashboard/../public/assets/thx_logo_hardhat.svg'),
