@@ -74,14 +74,14 @@ Vue.config.productionTip = false;
 
 Vue.config.errorHandler = (error: Error, vm: Vue) => {
     console.error(error);
-    vm.$bvToast.toast(error.message, {
-        variant: 'danger',
-        title: 'Error',
-        noFade: true,
-        noAutoHide: true,
-        appendToast: true,
-        solid: true,
-    });
+    // vm.$bvToast.toast(error.message, {
+    //     variant: 'danger',
+    //     title: 'Error',
+    //     noFade: true,
+    //     noAutoHide: true,
+    //     appendToast: true,
+    //     solid: true,
+    // });
 };
 
 // Sets a container to fix issues related to bootstrap modals
