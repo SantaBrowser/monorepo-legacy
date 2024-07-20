@@ -182,6 +182,7 @@ import BaseModalQuestDailyCreate from '@thxnetwork/dashboard/components/modals/B
 import BaseModalQuestSocialCreate from '@thxnetwork/dashboard/components/modals/BaseModalQuestSocialCreate.vue';
 import BaseModalQuestInviteCreate from '@thxnetwork/dashboard/components/modals/BaseModalQuestInviteCreate.vue';
 import BaseModalQuestCustomCreate from '@thxnetwork/dashboard/components/modals/BaseModalQuestCustomCreate.vue';
+import BaseModalQuestCashbackCreate from '@thxnetwork/dashboard/components/modals/BaseModalQuestCashbackCreate.vue';
 import BaseModalQuestWeb3Create from '@thxnetwork/dashboard/components/modals/BaseModalQuestWeb3Create.vue';
 import BaseModalQuestInviteClaims from '@thxnetwork/dashboard/components/modals/BaseModalQuestInviteClaims.vue';
 import BaseModalQuestGitcoinCreate from '@thxnetwork/dashboard/components/modals/BaseModalQuestGitcoinCreate.vue';
@@ -201,6 +202,7 @@ import BaseButtonQuestEntries from '@thxnetwork/dashboard/components/buttons/Bas
         BaseModalQuestInviteCreate,
         BaseModalQuestWebhookCreate,
         BaseModalQuestInviteClaims,
+        BaseModalQuestCashbackCreate
     },
     computed: mapGetters({
         pools: 'pools/all',
@@ -227,6 +229,7 @@ export default class QuestsView extends Vue {
         [QuestVariant.YouTube]: 'BaseModalQuestSocialCreate',
         [QuestVariant.Discord]: 'BaseModalQuestSocialCreate',
         [QuestVariant.Custom]: 'BaseModalQuestCustomCreate',
+        [QuestVariant.CashbackPlaywall]: 'BaseModalQuestCashbackCreate',
         [QuestVariant.Web3]: 'BaseModalQuestWeb3Create',
         [QuestVariant.Gitcoin]: 'BaseModalQuestGitcoinCreate',
         [QuestVariant.Webhook]: 'BaseModalQuestWebhookCreate',
@@ -238,6 +241,7 @@ export default class QuestsView extends Vue {
         [QuestVariant.Discord]: 'fab fa-discord',
         [QuestVariant.YouTube]: 'fab fa-youtube',
         [QuestVariant.Custom]: 'fas fa-flag',
+        [QuestVariant.CashbackPlaywall]: 'fas fa-flag',
         [QuestVariant.Web3]: 'fab fa-ethereum',
         [QuestVariant.Gitcoin]: 'fas fa-fingerprint',
         [QuestVariant.Webhook]: 'fas fa-globe',
