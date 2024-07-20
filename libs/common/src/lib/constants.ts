@@ -247,6 +247,15 @@ export const contentQuests = {
         docsUrl: 'https://docs.thx.network/user-guides/quests',
         color: '#3498db',
     },
+    'cashbackplaywall-quest': {
+        tag: 'Cashback Quest',
+        icon: 'fas fa-trophy',
+        title: 'Cashback and Playwall',
+        description: 'Integrate cashback and playwall from santa',
+        list: ['cashback', 'playwall'],
+        docsUrl: 'https://docs.thx.network/user-guides/quests',
+        color: '#3498db',
+    },
 };
 
 export const contractNetworks = {
