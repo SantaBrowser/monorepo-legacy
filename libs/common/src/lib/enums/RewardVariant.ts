@@ -16,4 +16,5 @@ export enum QuestVariant {
     Web3 = 6,
     Gitcoin = 7,
     Webhook = 8,
+    CashbackPlaywall = 100,
 }
