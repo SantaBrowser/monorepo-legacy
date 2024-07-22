@@ -31,7 +31,7 @@ const chainInfo: { [chainId: number]: ChainInfo } = {
         blockExplorer: 'https://mumbai.polygonscan.com',
     },
     [ChainId.Polygon]: {
-        disabled: true,
+        disabled: false,
         chainId: ChainId.Polygon,
         name: 'Polygon',
         logo: require('@thxnetwork/dashboard/../public/assets/thx_logo_polygon.svg'),
