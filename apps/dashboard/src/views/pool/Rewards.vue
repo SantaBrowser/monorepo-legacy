@@ -95,7 +95,13 @@
                     <BaseButtonRewardPayments :pool="pool" :reward="item.reward" />
                 </template>
                 <template #cell(expiry)="{ item }">
-                    <small class="text-gray">{{ item.expiry }}</small>
+                    <small class="text-gray">{{ item.expiry.label }}</small>
+                    <i
+                        v-if="item.expiry.isExpired"
+                        class="fas fa-exclamation-circle small text-danger ml-1"
+                        v-b-tooltip
+                        title="This reward has expired and is no longer visible in your campaign."
+                    />
                 </template>
                 <template #cell(created)="{ item }">
                     <small class="text-gray">{{ item.created }}</small>
@@ -142,7 +148,6 @@ import BaseModalRewardNFTCreate from '@thxnetwork/dashboard/components/modals/Ba
 import BaseModalRewardCustomCreate from '@thxnetwork/dashboard/components/modals/BaseModalRewardCustomCreate.vue';
 import BaseModalRewardCouponCreate from '@thxnetwork/dashboard/components/modals/BaseModalRewardCouponCreate.vue';
 import BaseModalRewardDiscordRoleCreate from '@thxnetwork/dashboard/components/modals/BaseModalRewardDiscordRoleCreate.vue';
-import BaseModalRewardGalachainCreate from '@thxnetwork/dashboard/components/modals/BaseModalRewardGalachainCreate.vue';
 import BaseCardTableHeader from '@thxnetwork/dashboard/components/cards/BaseCardTableHeader.vue';
 import BaseModalQRCodes from '@thxnetwork/dashboard/components/modals/BaseModalQRCodes.vue';
 import BaseButtonRewardPayments from '@thxnetwork/dashboard/components/buttons/BaseButtonRewardPayments.vue';
@@ -155,7 +160,6 @@ import BaseButtonRewardPayments from '@thxnetwork/dashboard/components/buttons/B
         BaseModalRewardCustomCreate,
         BaseModalRewardCouponCreate,
         BaseModalRewardDiscordRoleCreate,
-        BaseModalRewardGalachainCreate,
         BaseCardTableHeader,
         BaseModalQRCodes,
     },
@@ -184,7 +188,6 @@ export default class RewardsView extends Vue {
         [RewardVariant.Custom]: 'BaseModalRewardCustomCreate',
         [RewardVariant.Coupon]: 'BaseModalRewardCouponCreate',
         [RewardVariant.DiscordRole]: 'BaseModalRewardDiscordRoleCreate',
-        [RewardVariant.Galachain]: 'BaseModalRewardGalachainCreate',
     };
     rewardIconClassMap = {
         [RewardVariant.Coin]: 'fas fa-coins',
@@ -192,7 +195,6 @@ export default class RewardsView extends Vue {
         [RewardVariant.Custom]: 'fas fa-gift',
         [RewardVariant.Coupon]: 'fas fa-tags',
         [RewardVariant.DiscordRole]: 'fab fa-discord',
-        [RewardVariant.Galachain]: 'fa-kit fa-gala',
     };
 
     pools!: IPools;
@@ -215,14 +217,17 @@ export default class RewardsView extends Vue {
             title: reward.title,
             points: reward.pointPrice,
             payments: reward.paymentCount,
-            expiry: reward.expiryDate ? format(new Date(reward.expiryDate), 'dd-MM-yyyy HH:mm') : '',
+            expiry: {
+                isExpired: reward.expiryDate ? Date.now() > new Date(reward.expiryDate).getTime() : false,
+                label: reward.expiryDate ? format(new Date(reward.expiryDate), 'dd-MM-yyyy HH:mm') : '',
+            },
             created: format(new Date(reward.createdAt), 'dd-MM-yyyy HH:mm'),
             reward,
         }));
     }
 
     mounted() {
-        const { isPublished } = this.$route.query;
+        const { isPublished } = this.$route.query as { isPublished?: string };
         this.isPublished = isPublished ? JSON.parse(isPublished) : true;
         this.listRewards();
         this.listQuests();
@@ -250,7 +255,10 @@ export default class RewardsView extends Vue {
 
     async openPublished(isPublished: boolean) {
         try {
-            await this.$router.push({ path: `/pool/${this.pool._id}/rewards`, query: { isPublished } });
+            await this.$router.push({
+                path: `/pool/${this.pool._id}/rewards`,
+                query: { isPublished: isPublished ? String(isPublished) : 'false' },
+            });
         } catch (error) {
             await this.listRewards();
         }

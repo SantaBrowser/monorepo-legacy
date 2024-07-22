@@ -1,6 +1,26 @@
 <template>
     <div>
-        <h2 class="mb-3">Participants: {{ participants.total }}</h2>
+        <div class="mb-3 d-flex align-items-center">
+            <h2 class="m-0">Participants</h2>
+            <b-dropdown
+                no-caret
+                variant="primary"
+                class="ml-auto"
+                menu-class="w-100"
+                toggle-class="justify-content-between align-items-center d-flex"
+                right
+            >
+                <template #button-content> <i class="fas fa-ellipsis-v ml-0" /> </template>
+                <b-dropdown-item v-b-modal="'BaseModalParticipantBalanceReset'"> Reset </b-dropdown-item>
+                <b-dropdown-item v-b-modal="'BaseModalParticipantExport'"> Export </b-dropdown-item>
+            </b-dropdown>
+            <BaseModalParticipantBalanceReset
+                id="BaseModalParticipantBalanceReset"
+                :pool="pool"
+                @hidden="getParticipants"
+            />
+            <BaseModalParticipantExport id="BaseModalParticipantExport" :pool="pool" />
+        </div>
         <BCard class="shadow-sm mb-5" no-body v-if="pool">
             <BaseCardTableHeader
                 :pool="pool"
@@ -26,23 +46,33 @@
             >
                 <!-- Head formatting -->
                 <template #head(rank)>
-                    <BaseBtnSort @click="onClickSort('rank', $event)">Rank</BaseBtnSort>
+                    Rank
+                    <!-- <BaseBtnSort @click="onClickSort('rank', $event)">Rank</BaseBtnSort> -->
                 </template>
                 <template #head(account)>
-                    <BaseBtnSort @click="onClickSort('username', $event)">Username</BaseBtnSort>
+                    Username
+                    <!-- <BaseBtnSort @click="onClickSort('username', $event)">Username</BaseBtnSort> -->
                 </template>
                 <template #head(email)>
-                    <BaseBtnSort @click="onClickSort('email', $event)">E-mail</BaseBtnSort>
+                    E-mail
+                    <!-- <BaseBtnSort @click="onClickSort('email', $event)">E-mail</BaseBtnSort> -->
                 </template>
                 <template #head(tokens)> Connected </template>
                 <template #head(pointBalance)>
-                    <BaseBtnSort @click="onClickSort('pointBalance', $event)">Point Balance</BaseBtnSort>
+                    Points
+                    <!-- <BaseBtnSort @click="onClickSort('pointBalance', $event)">Points</BaseBtnSort> -->
+                </template>
+                <template #head(wallets)>
+                    Wallets
+                    <!-- <BaseBtnSort @click="onClickSort('pointBalance', $event)">Points</BaseBtnSort> -->
                 </template>
                 <template #head(subscription)>
-                    <BaseBtnSort @click="onClickSort('subscription', $event)">Subscribed</BaseBtnSort>
+                    Subscribed
+                    <!-- <BaseBtnSort @click="onClickSort('subscription', $event)">Subscribed</BaseBtnSort> -->
                 </template>
                 <template #head(createdAt)>
-                    <BaseBtnSort @click="onClickSort('createdAt', $event)">Created</BaseBtnSort>
+                    Joined
+                    <!-- <BaseBtnSort @click="onClickSort('createdAt', $event)">Created</BaseBtnSort> -->
                 </template>
                 <template #head(participant)> &nbsp;</template>
 
@@ -57,6 +87,11 @@
                 </template>
                 <template #cell(pointBalance)="{ item }">
                     <strong class="text-primary">{{ item.pointBalance }}</strong>
+                </template>
+                <template #cell(wallets)="{ item }">
+                    <b-badge v-if="item.wallets.length">
+                        {{ `${item.wallets.length} wallet${item.wallets.length !== 1 ? '2' : ''}` }}
+                    </b-badge>
                 </template>
                 <template #cell(subscription)="{ item }">
                     <small class="text-muted">
@@ -95,12 +130,13 @@ import BaseBtnSort from '@thxnetwork/dashboard/components/buttons/BaseBtnSort.vu
 import BaseCardTableHeader from '@thxnetwork/dashboard/components/cards/BaseCardTableHeader.vue';
 import BaseParticipantAccount, { parseAccount } from '@thxnetwork/dashboard/components/BaseParticipantAccount.vue';
 import BaseModalParticipant from '@thxnetwork/dashboard/components/modals/BaseModalParticipant.vue';
+import BaseModalParticipantBalanceReset from '@thxnetwork/dashboard/components/modals/BaseModalParticipantBalanceReset.vue';
+import BaseModalParticipantExport from '@thxnetwork/dashboard/components/modals/BaseModalParticipantExport.vue';
 import BaseParticipantConnectedAccount, {
     parseConnectedAccounts,
 } from '@thxnetwork/dashboard/components/BaseParticipantConnectedAccount.vue';
 import { format } from 'date-fns';
 import { IPools, TParticipantState } from '@thxnetwork/dashboard/store/modules/pools';
-import { on } from 'events';
 
 @Component({
     components: {
@@ -108,6 +144,8 @@ import { on } from 'events';
         BaseCardTableHeader,
         BaseParticipantAccount,
         BaseParticipantConnectedAccount,
+        BaseModalParticipantExport,
+        BaseModalParticipantBalanceReset,
         BaseModalParticipant,
     },
     computed: mapGetters({

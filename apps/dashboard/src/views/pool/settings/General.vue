@@ -73,39 +73,31 @@
             </b-col>
         </b-form-row>
         <hr />
-
         <b-form-row>
             <b-col md="4">
-                <strong>Wallet</strong>
-                <div class="text-muted">This wallet is used for reward distribution and fee payments.</div>
+                <strong>Leaderboard</strong>
+                <div class="text-muted">
+                    Leaderboard scores are the sumb of points earned with quests over a given amount of weeks.
+                </div>
             </b-col>
             <b-col md="8">
                 <BaseFormGroup
-                    label="Safe Wallet Address"
-                    tooltip="Your assets are stored in Safe's battle-tested multisigs."
+                    label="Duration (weeks)"
+                    description="Minimum of 1 and maximum of 52 weeks."
+                    tooltip="The public scores will be calculated based this amount of weeks since the current date. Shorter durations will show more recent scores. Longer durations will show more stable scores."
                 >
-                    <b-input-group>
-                        <b-form-input disabled :value="pool.safe && pool.safeAddress" />
-                        <template #append>
-                            <b-button
-                                :disabled="!slug.length"
-                                variant="dark"
-                                v-clipboard:copy="pool.safe && pool.safeAddress"
-                                v-clipboard:success="() => (isCopied = true)"
-                                class="ml-0"
-                            >
-                                <i class="fas ml-0" :class="isCopied ? 'fa-clipboard-check' : 'fa-clipboard'"></i>
-                            </b-button>
-                        </template>
-                    </b-input-group>
+                    <b-form-input
+                        @change="onChangeSettings"
+                        v-model="leaderboardInWeeks"
+                        min="1"
+                        max="52"
+                        type="number"
+                    />
                     <template #description>
-                        Your assets are stored in
-                        <b-link
-                            :href="`https://app.safe.global/transactions/history?safe=${pool.safe && pool.safeAddress}`"
-                            target="_blank"
-                        >
-                            Safe's battle-tested multisigs
-                        </b-link>
+                        View the
+                        <b-link :to="`${widgetUrl}/c/${pool.settings.slug}/ranking`">public leaderboard</b-link> for
+                        your campaign or learn more about your top participants in
+                        <b-link :to="`/pool/${pool._id}/dashboard`">campaign analytics</b-link>.
                     </template>
                 </BaseFormGroup>
             </b-col>
@@ -158,7 +150,7 @@
             @submit="remove(pool._id)"
             :id="`modalDelete-${pool._id}`"
             :error="error"
-            :subject="pool._id"
+            :subject="pool.settings.title"
         />
     </div>
 </template>
@@ -169,7 +161,7 @@ import { Component, Vue } from 'vue-property-decorator';
 import { mapGetters } from 'vuex';
 import { chainInfo } from '@thxnetwork/dashboard/utils/chains';
 import BaseListItemCollaborator from '@thxnetwork/dashboard/components/list-items/BaseListItemCollaborator.vue';
-import BaseDateDuration, { parseDateTime } from '@thxnetwork/dashboard/components/form-group/BaseDateDuration.vue';
+import BaseDateDuration from '@thxnetwork/dashboard/components/form-group/BaseDateDuration.vue';
 import BaseModalDelete from '@thxnetwork/dashboard/components/modals/BaseModalDelete.vue';
 import slugify from '@thxnetwork/dashboard/utils/slugify';
 import { WIDGET_URL } from '@thxnetwork/dashboard/config/secrets';
@@ -195,6 +187,7 @@ export default class SettingsView extends Vue {
     pools!: IPools;
     title = '';
     description = '';
+    leaderboardInWeeks = 4;
     isWeeklyDigestEnabled = false;
     isPublished = false;
     startDate: Date | null = null;
@@ -214,13 +207,7 @@ export default class SettingsView extends Vue {
         this.description = this.pool.settings.description;
         this.isPublished = this.pool.settings.isPublished;
         this.isWeeklyDigestEnabled = this.pool.settings.isWeeklyDigestEnabled;
-    }
-
-    onUpdateDuration({ startDate, startTime, endDate, endTime }) {
-        this.onChangeSettings({
-            startDate: parseDateTime(startDate, startTime),
-            endDate: parseDateTime(endDate, endTime),
-        } as any);
+        this.leaderboardInWeeks = this.pool.settings.leaderboardInWeeks;
     }
 
     async onChangeSlug(slug: string) {
@@ -246,8 +233,7 @@ export default class SettingsView extends Vue {
                 title: this.title,
                 slug: this.slug,
                 description: this.description,
-                startDate: this.startDate,
-                endDate: this.endDate,
+                leaderboardInWeeks: Number(this.leaderboardInWeeks),
                 isPublished: this.isPublished,
                 isWeeklyDigestEnabled: this.isWeeklyDigestEnabled,
             },

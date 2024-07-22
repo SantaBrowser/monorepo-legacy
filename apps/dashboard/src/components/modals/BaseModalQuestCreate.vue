@@ -74,6 +74,16 @@
                                         @input="onChangeTime"
                                     />
                                 </b-col>
+                                <b-col>
+                                    <b-link
+                                        v-if="expirationDate"
+                                        variant="link"
+                                        class="text-danger small m-0"
+                                        @click="onClickExpiryRemove"
+                                    >
+                                        Remove
+                                    </b-link>
+                                </b-col>
                             </b-row>
                         </BaseFormGroup>
                         <hr />
@@ -103,7 +113,7 @@
         </template>
         <template #btn-primary>
             <b-button
-                :disabled="disabled"
+                :disabled="disabled || loading"
                 class="rounded-pill"
                 type="submit"
                 form="formQuestCreate"
@@ -135,7 +145,7 @@ import BaseCardQuestLocks from '@thxnetwork/dashboard/components/cards/BaseCardQ
 export default class ModalQuestCreate extends Vue {
     imageFile: File | null = null;
     image = '';
-    expirationDate: Date | null = null;
+    expirationDate: Date | string = '';
     expirationTime = '00:00:00';
 
     @Prop() id!: string;
@@ -173,9 +183,14 @@ export default class ModalQuestCreate extends Vue {
     }
 
     onChangeTime(time: string) {
-        if (!this.expirationDate) return;
         this.expirationTime = time;
         this.change();
+    }
+
+    onClickExpiryRemove() {
+        this.expirationDate = '';
+        this.expirationTime = '00:00:00';
+        this.$emit('change-date', '');
     }
 
     change() {
@@ -185,7 +200,7 @@ export default class ModalQuestCreate extends Vue {
         expiryDate.setHours(Number(parts[0]));
         expiryDate.setMinutes(Number(parts[1]));
         expiryDate.setSeconds(Number(parts[2]));
-        this.$emit('change-date', expiryDate);
+        this.$emit('change-date', expiryDate.toISOString());
     }
 
     onChangeLocks(locks: TQuestLock[]) {

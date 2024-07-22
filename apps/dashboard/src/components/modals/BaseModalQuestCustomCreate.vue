@@ -46,11 +46,7 @@
                             label="Event Type"
                             tooltip="Requires this event for a participant to complete the quest."
                         >
-                            <BaseDropdownEventType
-                                @click="eventName = $event"
-                                :events="pool.events"
-                                :event-name="eventName"
-                            />
+                            <BaseDropdownEventType @click="eventName = $event" :pool="pool" :event-name="eventName" />
                             <template #description>
                                 Use our
                                 <b-link href="https://docs.thx.network/developers/js-sdk">JavaScript SDK</b-link> or
@@ -90,7 +86,7 @@ export default class ModalQuestCustomCreate extends Vue {
     error = '';
     title = '';
     description = '';
-    expiryDate: Date | number | null = null;
+    expiryDate: Date | string = '';
     isPublished = false;
     amount = 0;
     limit = 0;
@@ -132,7 +128,7 @@ export default class ModalQuestCustomCreate extends Vue {
                 file: this.file,
                 amount: this.amount,
                 limit: this.limit,
-                expiryDate: this.expiryDate ? new Date(this.expiryDate).toISOString() : undefined,
+                expiryDate: this.expiryDate,
                 infoLinks: JSON.stringify(this.infoLinks.filter((link) => link.label && isValidUrl(link.url))),
                 index: !this.reward ? this.total : this.reward.index,
                 eventName: this.eventName,

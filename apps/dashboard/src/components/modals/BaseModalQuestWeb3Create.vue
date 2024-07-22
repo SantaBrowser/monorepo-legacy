@@ -115,7 +115,7 @@ export default class ModalQuestWeb3Create extends Vue {
     threshold = '0';
     infoLinks: TInfoLink[] = [{ label: '', url: '' }];
     contracts: { chainId: ChainId; address: string }[] = [{ chainId: ChainId.Polygon, address: '' }];
-    expiryDate: Date | number | null = null;
+    expiryDate: Date | string = '';
     locks: TQuestLock[] = [];
 
     @Prop() id!: string;
@@ -152,7 +152,7 @@ export default class ModalQuestWeb3Create extends Vue {
                 amount: this.amount,
                 methodName: this.methodName,
                 threshold: this.threshold,
-                expiryDate: this.expiryDate ? new Date(this.expiryDate).toISOString() : undefined,
+                expiryDate: this.expiryDate,
                 contracts: JSON.stringify(this.contracts),
                 infoLinks: JSON.stringify(this.infoLinks.filter((link) => link.label && isValidUrl(link.url))),
                 locks: this.locks,
