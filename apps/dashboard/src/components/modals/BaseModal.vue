@@ -1,25 +1,20 @@
 <template>
     <b-modal
-        :size="size || 'lg'"
         @show="onShow"
         @hidden="$emit('hidden')"
+        :no-close-on-backdrop="true"
         :title="title"
+        :size="size || 'lg'"
         :id="id"
+        :hide-footer="hideFooter"
         centered
-        :body-bg-variant="loading ? 'light' : 'white'"
-        :hide-footer="loading || hideFooter"
-        :hide-header="loading"
     >
-        <div class="w-100 center-center bg-light py-3" v-if="loading">
-            <div class="text-center w-100">
-                <b-spinner variant="gray" class="mb-3" />
-                <p class="text-muted">{{ info }}</p>
-            </div>
-        </div>
         <b-alert variant="danger" show v-if="error">
             {{ error }}
         </b-alert>
-        <slot name="modal-body"></slot>
+
+        <slot name="modal-body"> </slot>
+
         <template v-slot:modal-footer="{}">
             <slot name="btn-primary"></slot>
         </template>
@@ -44,34 +39,12 @@ export default class BaseModal extends Vue {
     @Prop() id!: string;
     @Prop() size!: string;
     @Prop() title!: string;
-    @Prop() loading!: boolean;
     @Prop() error!: string;
     @Prop() hideFooter!: boolean;
-
-    mounted() {
-        const messages = [
-            'Preparing network request...',
-            'Sending network request...',
-            'Interacting with the network...',
-            'Reading data from the network...',
-            'Preparing network response...',
-        ];
-        let index = 0;
-        this.info = messages[index];
-        this.interval = setInterval(() => {
-            if (index >= messages.length) index = 0;
-            this.info = messages[index++];
-        }, 3000);
-    }
 
     onShow() {
         track('UserOpens', [this.profile.sub, this.id || 'unknown']);
         this.$emit('show');
-    }
-
-    beforeDestroy() {
-        clearInterval(this.interval);
-        this.interval = null;
     }
 }
 </script>

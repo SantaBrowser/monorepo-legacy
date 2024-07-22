@@ -14,11 +14,9 @@
                         <b-dropdown-item-button
                             v-for="(variant, key) of Object.keys(QuestVariant).filter((v) => isNaN(Number(v)))"
                             :key="key"
-                            :disabled="QuestVariant[variant] == QuestVariant.Invite"
                             v-b-modal="`${questModalComponentMap[QuestVariant[variant]]}-${variant}`"
                             button-class="d-flex px-2"
                             style="flex: 1 0 50%"
-                            :class="{ 'text-opaque': QuestVariant[variant] === QuestVariant.Invite }"
                         >
                             <b-media>
                                 <template #aside>
@@ -122,6 +120,7 @@
                         v-if="
                             [
                                 QuestVariant.Daily,
+                                QuestVariant.Invite,
                                 QuestVariant.Twitter,
                                 QuestVariant.YouTube,
                                 QuestVariant.Discord,
@@ -136,7 +135,13 @@
                     />
                 </template>
                 <template #cell(expiry)="{ item }">
-                    <small class="text-gray">{{ item.expiry }}</small>
+                    <small class="text-gray">{{ item.expiry.label }}</small>
+                    <i
+                        v-if="item.expiry.isExpired"
+                        class="fas fa-exclamation-circle small text-danger ml-1"
+                        v-b-tooltip
+                        title="This quest has expired and is no longer visible in your campaign."
+                    />
                 </template>
                 <template #cell(created)="{ item }">
                     <small class="text-gray">{{ item.created }}</small>
@@ -259,14 +264,17 @@ export default class QuestsView extends Vue {
             title: quest.title,
             points: quest.amounts ? `${quest.amounts.length} days` : quest.amount,
             entries: quest.entryCount,
-            expiry: quest.expiryDate ? format(new Date(quest.expiryDate), 'dd-MM-yyyy HH:mm') : '',
+            expiry: {
+                isExpired: quest.expiryDate ? Date.now() > new Date(quest.expiryDate).getTime() : false,
+                label: quest.expiryDate ? format(new Date(quest.expiryDate), 'dd-MM-yyyy HH:mm') : '',
+            },
             created: format(new Date(quest.createdAt), 'dd-MM-yyyy HH:mm'),
             quest,
         }));
     }
 
     mounted() {
-        const { isPublished } = this.$route.query;
+        const { isPublished } = this.$route.query as { isPublished?: string };
         this.isPublished = isPublished ? JSON.parse(isPublished) : true;
         this.listQuests();
     }
@@ -289,7 +297,10 @@ export default class QuestsView extends Vue {
 
     async openPublished(isPublished: boolean) {
         try {
-            await this.$router.push({ path: `/pool/${this.pool._id}/quests`, query: { isPublished } });
+            await this.$router.push({
+                path: `/pool/${this.pool._id}/quests`,
+                query: { isPublished: isPublished ? String(isPublished) : 'false' },
+            });
         } catch (error) {
             await this.listQuests();
         }

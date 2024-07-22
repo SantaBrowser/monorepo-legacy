@@ -3,74 +3,8 @@ import axios from 'axios';
 import { Module, VuexModule, Action, Mutation } from 'vuex-module-decorators';
 import { track } from '@thxnetwork/common/mixpanel';
 import { prepareFormDataForUpload } from '@thxnetwork/dashboard/utils/uploadFile';
-import { AccountPlanType } from '@thxnetwork/common/enums';
+import { AccountPlanType, ChainId } from '@thxnetwork/common/enums';
 import * as html from 'html-entities';
-
-export interface IPoolAnalytic {
-    _id: string;
-    erc20Perks: [
-        {
-            day: string;
-            totalAmount: number;
-        },
-    ];
-    erc721Perks: [
-        {
-            day: string;
-            totalAmount: number;
-        },
-    ];
-    customRewards: [
-        {
-            day: string;
-            totalAmount: number;
-        },
-    ];
-    couponRewards: [
-        {
-            day: string;
-            totalAmount: number;
-        },
-    ];
-    discordRoleRewards: [
-        {
-            day: string;
-            totalAmount: number;
-        },
-    ];
-
-    //
-    dailyRewards: [
-        {
-            day: string;
-            totalAmount: number;
-        },
-    ];
-    referralRewards: [
-        {
-            day: string;
-            totalAmount: number;
-        },
-    ];
-    pointRewards: [
-        {
-            day: string;
-            totalAmount: number;
-        },
-    ];
-    milestoneRewards: [
-        {
-            day: string;
-            totalAmount: number;
-        },
-    ];
-    web3Quests: [
-        {
-            day: string;
-            totalAmount: number;
-        },
-    ];
-}
 
 export interface IPoolAnalyticLeaderBoard {
     _id: string;
@@ -83,39 +17,6 @@ export type PoolMetric = {
     totalCompleted: number;
     totalAmount: number;
 };
-
-export interface IPoolAnalyticMetrics {
-    _id: string;
-    participantActiveCount: number;
-    participantCount: number;
-    subscriptionCount: number;
-    dailyQuest: PoolMetric;
-    socialQuest: PoolMetric;
-    inviteQuest: PoolMetric;
-    customQuest: PoolMetric;
-    web3Quest: PoolMetric;
-    gitcoinQuest: PoolMetric;
-    coinReward: PoolMetric;
-    nftReward: PoolMetric;
-    customReward: PoolMetric;
-    couponReward: PoolMetric;
-    discordRoleReward: PoolMetric;
-}
-export interface IPools {
-    [id: string]: TPool;
-}
-
-export interface IPoolAnalytics {
-    [id: string]: IPoolAnalytic;
-}
-
-export interface IPoolAnalyticsLeaderBoard {
-    [id: string]: IPoolAnalyticLeaderBoard[];
-}
-
-export interface IPoolAnalyticsMetrics {
-    [id: string]: IPoolAnalyticMetrics;
-}
 
 export type TRewardState = {
     [poolId: string]: {
@@ -151,19 +52,12 @@ export type TQuestEntryState = {
     };
 };
 
-export type TEventState = {
-    [poolId: string]: {
-        [eventId: string]: TEvent;
-    };
-};
 export type TGuildState = {
     [poolId: string]: {
         [guildId: string]: TDiscordGuild;
     };
 };
-export type TIdentityState = {
-    [poolId: string]: TPaginationResult & { results: TIdentity[] };
-};
+
 export type TCouponCodeState = {
     [poolId: string]: {
         [rewardId: string]: TPaginationResult & { results: TCouponCode[] };
@@ -174,16 +68,16 @@ export type TParticipantState = {
     [poolId: string]: TPaginationResult & { results: TParticipant[] };
 };
 
-export type TInvoiceState = {
-    [poolId: string]: TInvoice[];
-};
-
 export type TPaymentState = {
     [poolId: string]: TPayment[];
 };
 
 export type TTwitterQueryState = {
     [poolId: string]: TTwitterQuery[];
+};
+
+export type TWalletState = {
+    [poolId: string]: TWallet[];
 };
 
 @Module({ namespaced: true })
@@ -194,13 +88,11 @@ class PoolModule extends VuexModule {
     _rewards: TQuestState = {};
     _rewardPayments: TQuestState = {};
     _guilds: TGuildState = {};
-    _events: TEventState = {};
-    _identities: TIdentityState = {};
+    _wallets: TWalletState = {};
     _participants: TParticipantState = {};
     _couponCodes: TCouponCodeState = {};
     _analytics: IPoolAnalytics = {};
     _analyticsMetrics: IPoolAnalyticsLeaderBoard = {};
-    _invoices: TInvoiceState = {};
     _payments: TPaymentState = {};
     _twitterQueries: TTwitterQueryState = {};
 
@@ -210,14 +102,6 @@ class PoolModule extends VuexModule {
 
     get all() {
         return this._all;
-    }
-
-    get invoices() {
-        return this._invoices;
-    }
-
-    get identities() {
-        return this._identities;
     }
 
     get guilds() {
@@ -240,10 +124,6 @@ class PoolModule extends VuexModule {
         return this._quests;
     }
 
-    get events() {
-        return this._events;
-    }
-
     get entries() {
         return this._entries;
     }
@@ -262,6 +142,10 @@ class PoolModule extends VuexModule {
 
     get analyticsMetrics() {
         return this._analyticsMetrics;
+    }
+
+    get wallets() {
+        return this._wallets;
     }
 
     @Mutation
@@ -302,16 +186,6 @@ class PoolModule extends VuexModule {
     }
 
     @Mutation
-    setEvents({ poolId, result }: { poolId: string; result: { results: TEvent[] } & TPaginationResult }) {
-        Vue.set(this._events, poolId, result);
-    }
-
-    @Mutation
-    setIdentities({ poolId, result }: { poolId: string; result: { results: TIdentity[] } & TPaginationResult }) {
-        Vue.set(this._identities, poolId, result);
-    }
-
-    @Mutation
     setPayments({ poolId, result }: { poolId: string; result: { results: TPayment[] } & TPaginationResult }) {
         Vue.set(this._payments, poolId, result);
     }
@@ -343,13 +217,6 @@ class PoolModule extends VuexModule {
         if (!this._rewardPayments[poolId]) Vue.set(this._rewardPayments, poolId, {});
         Vue.set(this._rewardPayments[poolId], rewardId, result);
     }
-
-    @Mutation
-    unsetIdentity(identity: TIdentity) {
-        const index = this._identities[identity.poolId].results.findIndex((i) => i._id === identity._id);
-        Vue.delete(this._identities[identity.poolId].results, index);
-    }
-
     @Mutation
     unsetQuestTwitterQuery(query: TTwitterQuery) {
         Vue.delete(this._twitterQueries[query.poolId], query._id);
@@ -433,22 +300,32 @@ class PoolModule extends VuexModule {
         const index = this._participants[data.poolId].results.findIndex((p) => p._id === data._id);
         Vue.set(this._participants[data.poolId].results, index, data);
     }
+    @Mutation
+    setWallets(wallets: TWallet[]) {
+        Vue.set(this._wallets, wallets[0].poolId, wallets);
+    }
 
     @Mutation
-    setInvoices(data: TInvoice[]) {
-        if (!data.length) return;
-        Vue.set(this._invoices, data[0].poolId, data);
+    unsetWallet({ pool, walletId }) {
+        Vue.delete(this._wallets[pool._id], walletId);
     }
 
     @Action({ rawError: true })
-    async listEvents({ pool, page, limit }) {
+    async listWallets({ pool }) {
         const { data } = await axios({
             method: 'GET',
-            url: `/pools/${pool._id}/events`,
-            headers: { 'X-PoolId': pool._id },
-            params: { page, limit },
+            url: `/pools/${pool._id}/wallets`,
         });
-        this.context.commit('setEvents', { poolId: pool._id, result: data });
+        this.context.commit('setWallets', data);
+    }
+
+    @Action({ rawError: true })
+    async removeWallet({ pool, walletId }) {
+        await axios({
+            method: 'DELETE',
+            url: `/pools/${pool._id}/wallets/${walletId}`,
+        });
+        this.context.commit('unsetWallet', { pool, walletId });
     }
 
     @Action({ rawError: true })
@@ -497,18 +374,16 @@ class PoolModule extends VuexModule {
     }
 
     @Action({ rawError: true })
-    async listIdentities(payload: { pool: TPool; limit: number; page: number }) {
-        const { data } = await axios({
-            method: 'GET',
-            url: `/pools/${payload.pool._id}/identities`,
-            headers: { 'X-PoolId': payload.pool._id },
-            params: {
-                limit: payload.limit,
-                page: payload.page,
+    async createWallet({ pool, chainId }: { pool: TPool; chainId: ChainId }) {
+        await axios({
+            method: 'POST',
+            url: `/pools/${pool._id}/wallets`,
+            data: {
+                chainId,
             },
         });
 
-        this.context.commit('setIdentities', { poolId: payload.pool._id, result: data });
+        await this.context.dispatch('listWallets', { pool });
     }
 
     @Action({ rawError: true })
@@ -556,25 +431,6 @@ class PoolModule extends VuexModule {
             url: `/pools/${pool._id}/payments`,
             data: { amountInWei, planType },
         });
-    }
-
-    @Action({ rawError: true })
-    async createIdentity(pool: TPool) {
-        await axios({
-            method: 'POST',
-            url: `/pools/${pool._id}/identities`,
-            headers: { 'X-PoolId': pool._id },
-        });
-    }
-
-    @Action({ rawError: true })
-    async removeIdentity(identity: TIdentity) {
-        await axios({
-            method: 'DELETE',
-            url: `/pools/${identity.poolId}/identities/${identity._id}`,
-            headers: { 'X-PoolId': identity.poolId },
-        });
-        this.context.commit('unsetIdentity', identity);
     }
 
     @Action({ rawError: true })
@@ -746,13 +602,11 @@ class PoolModule extends VuexModule {
     }
 
     @Action({ rawError: true })
-    async read(_id: string) {
+    async read(poolId: string) {
         const r = await axios({
             method: 'get',
-            url: '/pools/' + _id,
-            headers: { 'X-PoolId': _id },
+            url: '/pools/' + poolId,
         });
-
         this.context.commit('set', r.data);
         return r.data;
     }
@@ -778,16 +632,6 @@ class PoolModule extends VuexModule {
         });
         this.context.commit('setAnalyticsMetrics', { _id: payload.poolId, ...r.data });
         return r.data;
-    }
-
-    @Action({ rawError: true })
-    async listInvoices({ pool }: { pool: TPool }) {
-        const { data } = await axios({
-            method: 'GET',
-            url: `/pools/${pool._id}/invoices`,
-            headers: { 'X-PoolId': pool._id },
-        });
-        this.context.commit('setInvoices', data);
     }
 
     @Action({ rawError: true })
@@ -858,6 +702,39 @@ class PoolModule extends VuexModule {
     }
 
     @Action({ rawError: true })
+    async resetParticipants(pool: TPool) {
+        await axios({
+            method: 'POST',
+            url: `/pools/${pool._id}/participants/balance/reset`,
+        });
+    }
+
+    @Action({ rawError: true })
+    async exportParticipants(pool: TPool) {
+        const response = await axios({
+            method: 'get',
+            url: `/pools/${pool._id}/participants/export`,
+            responseType: 'blob',
+        });
+        // Create a URL for the blob
+        const url = window.URL.createObjectURL(new Blob([response.data], { type: 'text/csv' }));
+
+        // Create a link element
+        const link = document.createElement('a');
+        link.href = url;
+        link.setAttribute('download', `participants${pool._id}.csv`); // Set file name
+
+        // Append the link to the body (required for Firefox)
+        document.body.appendChild(link);
+
+        // Simulate a click to trigger download
+        link.click();
+
+        // Clean up and remove the link
+        link.parentNode?.removeChild(link);
+    }
+
+    @Action({ rawError: true })
     async getLeaderboard({
         pool,
         limit,
@@ -892,6 +769,16 @@ class PoolModule extends VuexModule {
             data,
         });
         this.context.commit('setParticipant', data);
+    }
+
+    @Action({ rawError: true })
+    async duplicate(pool: TPool) {
+        const { data } = await axios({
+            method: 'POST',
+            url: `/pools/${pool._id}/duplicate`,
+        });
+
+        this.context.commit('set', data);
     }
 
     @Action({ rawError: true })

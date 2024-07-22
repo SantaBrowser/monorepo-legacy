@@ -31,6 +31,16 @@
                         <b-col md="6">
                             <b-timepicker :disabled="!expirationDate" :value="expirationTime" @input="onChangeTime" />
                         </b-col>
+                        <b-col>
+                            <b-link
+                                v-if="expirationDate"
+                                variant="link"
+                                class="text-danger small m-0"
+                                @click="onClickExpiryRemove"
+                            >
+                                Remove
+                            </b-link>
+                        </b-col>
                     </b-row>
                 </b-form-group>
             </div>
@@ -44,7 +54,7 @@ import { Component, Prop, Vue } from 'vue-property-decorator';
 @Component({})
 export default class BaseCardRewardExpiry extends Vue {
     isVisible = false;
-    expirationDate: Date | null = null;
+    expirationDate: Date | string = '';
     expirationTime = '00:00:00';
 
     @Prop() expiryDate!: Date;
@@ -75,6 +85,12 @@ export default class BaseCardRewardExpiry extends Vue {
         this.change();
     }
 
+    onClickExpiryRemove() {
+        this.expirationDate = '';
+        this.expirationTime = '00:00:00';
+        this.$emit('change-date', '');
+    }
+
     change() {
         if (!this.expirationDate) return;
         const expiryDate = new Date(this.expirationDate);
@@ -82,7 +98,7 @@ export default class BaseCardRewardExpiry extends Vue {
         expiryDate.setHours(Number(parts[0]));
         expiryDate.setMinutes(Number(parts[1]));
         expiryDate.setSeconds(Number(parts[2]));
-        this.$emit('change-date', expiryDate);
+        this.$emit('change-date', expiryDate.toISOString());
     }
 }
 </script>

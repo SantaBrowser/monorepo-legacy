@@ -52,14 +52,11 @@
                     <hr class="mt-0" />
                     <div class="px-3">
                         <BaseFormGroup
+                            required
                             label="Event Type"
                             tooltip="Requires this event for a participant to complete the quest."
                         >
-                            <BaseDropdownEventType
-                                @click="eventName = $event"
-                                :events="pool.events"
-                                :event-name="eventName"
-                            />
+                            <BaseDropdownEventType @click="eventName = $event" :pool="pool" :event-name="eventName" />
                             <template #description>
                                 Use our
                                 <b-link href="https://docs.thx.network/developers/js-sdk">JavaScript SDK</b-link> or
@@ -106,7 +103,7 @@ export default class ModalRewardDailyCreate extends Vue {
     infoLinks: TInfoLink[] = [{ label: '', url: '' }];
     isEnabledWebhookQualification = false;
     file: File | null = null;
-    expiryDate: Date | number | null = null;
+    expiryDate: Date | string = '';
     eventName = '';
     isVisible = true;
     locks: TQuestLock[] = [];
@@ -148,8 +145,7 @@ export default class ModalRewardDailyCreate extends Vue {
                 file: this.file,
                 isPublished: this.isPublished,
                 eventName: this.eventName,
-                expiryDate: this.expiryDate ? new Date(this.expiryDate).toISOString() : undefined,
-                page: this.reward ? this.reward.page : 1,
+                expiryDate: this.expiryDate,
                 infoLinks: JSON.stringify(this.infoLinks.filter((link) => link.label && isValidUrl(link.url))),
                 index: this.reward ? this.reward.index : this.total,
                 locks: JSON.stringify(this.locks),

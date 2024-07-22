@@ -13,11 +13,11 @@
         </template>
         <b-dropdown-item-button @click="$emit('update', null)"> None </b-dropdown-item-button>
         <b-dropdown-divider />
-        <b-dropdown-item v-if="!haserc20List"> No coins available. </b-dropdown-item>
+        <b-dropdown-item v-if="!erc20s.length"> No coins available. </b-dropdown-item>
         <b-dropdown-item-button
             :disabled="chainId !== erc20.chainId"
             :key="erc20._id"
-            v-for="erc20 of erc20List"
+            v-for="erc20 of erc20s"
             @click="$emit('update', erc20)"
         >
             <div class="d-flex align-items-center">
@@ -25,23 +25,13 @@
                 <strong class="mr-1">{{ erc20.symbol }}</strong> {{ erc20.name }}
             </div>
         </b-dropdown-item-button>
-        <b-dropdown-divider />
-        <b-dropdown-item-button
-            :key="erc20.address"
-            v-for="erc20 of tokenList"
-            :disabled="chainId !== ChainId.Polygon"
-            @click="$emit('update', erc20)"
-        >
-            <img :src="erc20.logoURI" width="20" class="mr-3" :alt="erc20.name" />
-            <strong>{{ erc20.symbol }}</strong> {{ erc20.name }}
-        </b-dropdown-item-button>
     </b-dropdown>
 </template>
 
 <script lang="ts">
 import { Component, Prop, Vue } from 'vue-property-decorator';
 import { mapGetters } from 'vuex';
-import { IERC20s, TERC20 } from '@thxnetwork/dashboard/types/erc20';
+import { IERC20s } from '@thxnetwork/dashboard/types/erc20';
 import { ChainId } from '@thxnetwork/common/enums';
 import BaseIdenticon from '../BaseIdenticon.vue';
 
@@ -55,14 +45,13 @@ import BaseIdenticon from '../BaseIdenticon.vue';
 })
 export default class ModalAssetPoolCreate extends Vue {
     ChainId = ChainId;
-    tokenList: TERC20[] = [];
     erc20List!: IERC20s;
 
     @Prop() erc20!: TERC20;
     @Prop() chainId!: ChainId;
 
-    get haserc20List() {
-        return !!Object.values(this.erc20List).length;
+    get erc20s() {
+        return Object.values(this.erc20List).filter((erc20) => erc20.chainId === this.chainId);
     }
 
     async mounted() {

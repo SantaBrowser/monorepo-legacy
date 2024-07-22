@@ -102,7 +102,7 @@ export default class ModalQuestSocialCreate extends Vue {
     profile!: TAccount;
     infoLinks: TInfoLink[] = [{ label: '', url: '' }];
     file: File | null = null;
-    expiryDate: Date | number | null = null;
+    expiryDate: Date | string = '';
     locks: TQuestLock[] = [];
 
     @Prop() id!: string;
@@ -155,8 +155,7 @@ export default class ModalQuestSocialCreate extends Vue {
                 interaction: this.requirement.interaction,
                 content: this.requirement.content,
                 contentMetadata: JSON.stringify(this.requirement.contentMetadata),
-                expiryDate: this.expiryDate ? new Date(this.expiryDate).toISOString() : undefined,
-                page: this.reward ? this.reward.page : 1,
+                expiryDate: this.expiryDate,
                 index: !this.reward ? this.total : this.reward.index,
                 locks: this.locks,
             })

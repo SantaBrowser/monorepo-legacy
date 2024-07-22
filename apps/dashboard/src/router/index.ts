@@ -74,47 +74,9 @@ const routes: Array<RouteConfig> = [
                         component: () => import('../views/pool/integrations/Discord.vue'),
                     },
                     {
-                        name: 'IntegrationsGalachain',
-                        path: 'galachain',
-                        component: () => import('../views/pool/integrations/Galachain.vue'),
-                    },
-                    {
                         name: 'IntegrationsTelegram',
                         path: 'telegram',
                         component: () => import('../views/pool/integrations/Telegram.vue'),
-                    },
-                ],
-            },
-            {
-                name: 'Developer',
-                path: 'developer',
-                redirect: 'developer/general',
-                component: () => import('../views/pool/Developer.vue'),
-                children: [
-                    {
-                        name: 'DeveloperGeneral',
-                        path: 'general',
-                        component: () => import('../views/pool/developer/General.vue'),
-                    },
-                    {
-                        name: 'DeveloperIdentities',
-                        path: 'identities',
-                        component: () => import('../views/pool/developer/Identities.vue'),
-                    },
-                    {
-                        name: 'DeveloperWebhooks',
-                        path: 'webhooks',
-                        component: () => import('../views/pool/developer/Webhooks.vue'),
-                    },
-                    {
-                        name: 'DeveloperAPI',
-                        path: 'api',
-                        component: () => import('../views/pool/developer/API.vue'),
-                    },
-                    {
-                        name: 'DeveloperEvents',
-                        path: 'events',
-                        component: () => import('../views/pool/developer/Events.vue'),
                     },
                 ],
             },
@@ -135,6 +97,11 @@ const routes: Array<RouteConfig> = [
                         component: () => import('../views/pool/settings/Team.vue'),
                     },
                     {
+                        name: 'SettingsWallets',
+                        path: 'wallets',
+                        component: () => import('../views/pool/settings/Wallets.vue'),
+                    },
+                    {
                         name: 'SettingsAppearance',
                         path: 'appearance',
                         component: () => import('../views/pool/settings/Appearance.vue'),
@@ -144,14 +111,42 @@ const routes: Array<RouteConfig> = [
                         path: 'widget',
                         component: () => import('../views/pool/settings/Widget.vue'),
                     },
-                    {
-                        name: 'SettingsInvoices',
-                        path: 'invoices',
-                        component: () => import('../views/pool/settings/Invoices.vue'),
-                    },
                 ],
             },
         ],
+    },
+    {
+        name: 'Developer',
+        path: '/developer',
+        redirect: 'developer/api',
+        component: () => import('../views/Developer.vue'),
+        children: [
+            {
+                name: 'DeveloperAPI',
+                path: 'api',
+                component: () => import('../views/developer/API.vue'),
+            },
+            {
+                name: 'DeveloperIdentities',
+                path: 'identities',
+                component: () => import('../views/developer/Identities.vue'),
+            },
+            {
+                name: 'DeveloperEvents',
+                path: 'events',
+                component: () => import('../views/developer/Events.vue'),
+            },
+            {
+                name: 'DeveloperWebhooks',
+                path: 'webhooks',
+                component: () => import('../views/developer/Webhooks.vue'),
+            },
+        ],
+    },
+    {
+        name: 'Invoices',
+        path: '/invoices',
+        component: () => import('../views/Invoices.vue'),
     },
     {
         name: 'preview',

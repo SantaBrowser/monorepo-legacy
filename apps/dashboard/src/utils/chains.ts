@@ -31,7 +31,7 @@ const chainInfo: { [chainId: number]: ChainInfo } = {
         blockExplorer: 'https://polygonscan.com',
     },
     [ChainId.PolygonZK]: {
-        disabled: false,
+        disabled: true,
         chainId: ChainId.PolygonZK,
         name: 'Polygon zkEVM',
         logo: require('@thxnetwork/dashboard/../public/assets/thx_logo_polygon.svg'),
@@ -45,11 +45,18 @@ const chainInfo: { [chainId: number]: ChainInfo } = {
         blockExplorer: 'https://lineascan.build',
     },
     [ChainId.Metis]: {
-        disabled: false,
+        disabled: true,
         chainId: ChainId.Metis,
         name: 'Metis',
         logo: require('@thxnetwork/dashboard/../public/assets/thx_logo_metis.svg'),
         blockExplorer: 'https://explorer.metis.io',
+    },
+    [ChainId.Base]: {
+        disabled: true,
+        chainId: ChainId.Base,
+        name: 'Base',
+        logo: require('@thxnetwork/dashboard/../public/assets/thx_logo_base.svg'),
+        blockExplorer: 'https://basescan.org',
     },
 };
 

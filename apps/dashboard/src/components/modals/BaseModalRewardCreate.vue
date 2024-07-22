@@ -5,6 +5,13 @@
                 <b-row>
                     <b-col md="6">
                         <BaseFormGroup
+                            label="Status"
+                            description="Publishing a reward will allow users to purchase it with points or claim it for free."
+                            tooltip="Show your reward to your users."
+                        >
+                            <b-form-checkbox v-model="isPublished" class="mb-0">Published</b-form-checkbox>
+                        </BaseFormGroup>
+                        <BaseFormGroup
                             required
                             label="Title"
                             tooltip="A short and engaging title for this reward. Shown in the reward shop of your campaign."
@@ -63,9 +70,6 @@
                         <b-form-group class="mb-0">
                             <b-form-checkbox v-model="isPromoted">Promoted</b-form-checkbox>
                         </b-form-group>
-                        <b-form-group>
-                            <b-form-checkbox v-model="isPublished">Published</b-form-checkbox>
-                        </b-form-group>
                     </b-col>
                 </b-row>
             </form>
@@ -106,7 +110,7 @@ import BaseCardQuestLocks from '../cards/BaseCardQuestLocks.vue';
 export default class ModalRewardERC20Create extends Vue {
     title = '';
     description = '';
-    expiryDate: Date | null = null;
+    expiryDate: Date | string = '';
     limit = 0;
     limitSupply = 0;
     pointPrice = 0;
@@ -142,7 +146,7 @@ export default class ModalRewardERC20Create extends Vue {
             title: this.title,
             description: this.description,
             pointPrice: this.pointPrice,
-            expiryDate: this.expiryDate ? new Date(this.expiryDate).toISOString() : undefined,
+            expiryDate: this.expiryDate || '',
             limit: this.limit,
             limitSupply: this.limitSupply,
             file: this.imageFile,
