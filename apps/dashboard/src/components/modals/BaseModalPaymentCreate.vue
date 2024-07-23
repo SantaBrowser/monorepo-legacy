@@ -205,7 +205,7 @@ export default class BaseModalPaymentCreate extends Vue {
         await this.$store.dispatch('erc20/allowance', {
             wallet: this.wallet,
             tokenAddress: this.addresses.USDC,
-            spender: this.addresses.THXPaymentSplitter,
+            spender: '0x000',
         });
     }
 
@@ -213,7 +213,7 @@ export default class BaseModalPaymentCreate extends Vue {
         await this.$store.dispatch('erc20/approve', {
             wallet: this.wallet,
             tokenAddress: this.addresses.USDC,
-            spender: this.addresses.THXPaymentSplitter,
+            spender: '0x000',
             amountInWei: ethers.constants.MaxUint256.toString(),
         });
     }

@@ -9,6 +9,13 @@ const chainInfo: { [chainId: number]: ChainInfo } = {
         logo: require('@thxnetwork/dashboard/../public/assets/thx_logo_ethereum.svg'),
         blockExplorer: 'https://mumbai.polygonscan.com',
     },
+    [ChainId.Sepolia]: {
+        disabled: false,
+        chainId: ChainId.Sepolia,
+        name: 'Sepolia',
+        logo: require('@thxnetwork/dashboard/../public/assets/thx_logo_ethereum.svg'),
+        blockExplorer: 'https://sepolia.etherscan.io',
+    },
     [ChainId.Arbitrum]: {
         disabled: true,
         chainId: ChainId.Arbitrum,

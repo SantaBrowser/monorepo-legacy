@@ -15,7 +15,7 @@
             </b-dropdown-item-button>
             <b-dropdown-divider />
             <b-dropdown-item-button
-                :disabled="chainId !== ChainId.Polygon"
+                :disabled="chainId !== ChainId.Sepolia"
                 :key="erc20.address"
                 v-for="erc20 of tokenList"
                 @click="onTokenListItemClick(erc20)"

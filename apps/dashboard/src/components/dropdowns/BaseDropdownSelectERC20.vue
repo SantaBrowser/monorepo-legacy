@@ -25,6 +25,16 @@
                 <strong class="mr-1">{{ erc20.symbol }}</strong> {{ erc20.name }}
             </div>
         </b-dropdown-item-button>
+        <b-dropdown-divider />
+        <b-dropdown-item-button
+            :key="erc20.address"
+            v-for="erc20 of tokenList"
+            :disabled="chainId !== ChainId.Sepolia"
+            @click="$emit('update', erc20)"
+        >
+            <img :src="erc20.logoURI" width="20" class="mr-3" :alt="erc20.name" />
+            <strong>{{ erc20.symbol }}</strong> {{ erc20.name }}
+        </b-dropdown-item-button>
     </b-dropdown>
 </template>
 
