@@ -29,7 +29,7 @@ export default class BaseModalWalletCreate extends Vue {
     chainInfo = chainInfo;
     isLoading = false;
     error = '';
-    chainId = ChainId.Polygon;
+    chainId = ChainId.Sepolia;
 
     @Prop() id!: string;
     @Prop() pool!: TPool;

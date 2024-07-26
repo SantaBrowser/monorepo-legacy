@@ -55,7 +55,7 @@
                         </b-input-group>
                     </b-col>
                 </b-row>
-                <b-link @click="contracts.push({ chainId: ChainId.Polygon, address: '' })">
+                <b-link @click="contracts.push({ chainId: ChainId.Sepolia, address: '' })">
                     Add another contract
                 </b-link>
             </BaseFormGroup>
@@ -114,7 +114,7 @@ export default class ModalQuestWeb3Create extends Vue {
     methodName = '';
     threshold = '0';
     infoLinks: TInfoLink[] = [{ label: '', url: '' }];
-    contracts: { chainId: ChainId; address: string }[] = [{ chainId: ChainId.Polygon, address: '' }];
+    contracts: { chainId: ChainId; address: string }[] = [{ chainId: ChainId.Sepolia, address: '' }];
     expiryDate: Date | string = '';
     locks: TQuestLock[] = [];
 

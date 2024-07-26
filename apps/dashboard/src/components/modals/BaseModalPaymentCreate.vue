@@ -152,7 +152,7 @@ export default class BaseModalPaymentCreate extends Vue {
 
     get wallet() {
         if (!this.pool || !this.walletList[this.pool._id]) return;
-        return this.walletList[this.pool._id].find((w) => w.chainId === ChainId.Polygon);
+        return this.walletList[this.pool._id].find((w) => w.chainId === ChainId.Sepolia);
     }
 
     get paymentAmount() {

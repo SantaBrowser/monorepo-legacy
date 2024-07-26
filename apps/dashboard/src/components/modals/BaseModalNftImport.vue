@@ -118,7 +118,7 @@ export default class ModalNftImport extends Vue {
     }[] = [];
     previewLoading = false;
     wallet: TWallet | null = null;
-    chainId: ChainId = ChainId.Polygon;
+    chainId: ChainId = ChainId.Sepolia;
 
     get isValidAddress() {
         return isAddress(this.nftAddress);

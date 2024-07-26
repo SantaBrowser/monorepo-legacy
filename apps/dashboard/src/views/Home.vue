@@ -122,7 +122,7 @@ export default class HomeView extends Vue {
 
         if (!Object.values(this.pools).length) {
             this.$store.dispatch('pools/create', {
-                chainId: NODE_ENV === 'production' ? ChainId.Polygon : ChainId.Hardhat,
+                chainId: NODE_ENV === 'production' ? ChainId.Sepolia : ChainId.Hardhat,
             });
         }
 
