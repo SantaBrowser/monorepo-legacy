@@ -72,7 +72,9 @@
                 <b-navbar-nav>
                     <b-nav-item to="/pricing" :title="TITLES.PRICING">Pricing</b-nav-item>
                     <b-nav-item to="/use-cases" :title="TITLES.USECASES">Use Cases</b-nav-item>
-                    <b-nav-item to="/token" :title="TITLES.SOLUTIONS">Token</b-nav-item>
+                    <b-nav-item href="https://docs.thx.network/tokenomics/usdthx" target="_blank" :title="TITLES.TOKEN"
+                        >Token</b-nav-item
+                    >
                     <b-nav-item to="/contact" :title="TITLES.CONTACT">Contact</b-nav-item>
 
                     <b-nav-item-dropdown no-caret right>
