@@ -17,7 +17,7 @@ const chainInfo: { [chainId: number]: ChainInfo } = {
         blockExplorer: 'https://sepolia.etherscan.io',
     },
     [ChainId.Arbitrum]: {
-        disabled: true,
+        disabled: false,
         chainId: ChainId.Arbitrum,
         name: 'Arbitrum',
         logo: require('@thxnetwork/dashboard/../public/assets/thx_logo_arbitrum.svg'),
