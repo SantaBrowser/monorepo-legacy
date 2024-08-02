@@ -4,6 +4,7 @@
     "license": "AGPL-3.0",
     "scripts": {
         "serve:frontend": "nx run-many --target=serve --projects=dashboard,public",
+        "serve:dashboard": "nx run-many --target=serve --projects=dashboard",
         "build": "nx build",
         "test": "NODE_OPTIONS='--max-old-space-size=8192' nx test",
         "postinstall": "node node_modules/@nx-plus/vue/patch-nx-dep-graph.js"

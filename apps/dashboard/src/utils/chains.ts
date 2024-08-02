@@ -16,6 +16,13 @@ const chainInfo: { [chainId: number]: ChainInfo } = {
         logo: require('@thxnetwork/dashboard/../public/assets/thx_logo_ethereum.svg'),
         blockExplorer: 'https://sepolia.etherscan.io',
     },
+    [ChainId.Skale]: {
+        disabled: false,
+        chainId: ChainId.Skale,
+        name: 'Skale',
+        logo: require('@thxnetwork/dashboard/../public/assets/thx_logo_ethereum.svg'),
+        blockExplorer: 'https://juicy-low-small-testnet.explorer.testnet.skalenodes.com/',
+    },
     [ChainId.Arbitrum]: {
         disabled: false,
         chainId: ChainId.Arbitrum,
