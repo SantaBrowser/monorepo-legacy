@@ -93,15 +93,20 @@
                 </b-navbar-nav>
 
                 <div class="navbar-nav-right">
-                    <!-- <b-button
-                        class="rounded-pill order-1 order-xl-0"
+                    <b-button
+                        class="rounded-pill order-1 order-xl-0 d-flex align-items-center"
                         :variant="isDarkJumbotron && !toggle ? 'link-light' : 'link-dark'"
-                        :href="dashboardUrl"
-                        :title="TITLES.HOME_SIGN_IN"
+                        href="https://app.1inch.io/#/137/simple/swap/MATIC/THX"
+                        target="_blank"
                     >
-                        <i class="fas fa-user mr-2" style="font-size: 1.1rem"></i>
-                        Dashboard
-                    </b-button> -->
+                        Buy <strong class="ml-1">$THX</strong>
+                        <b-img
+                            :src="require('../../public/assets/img/logo.svg')"
+                            :alt="ALT_TEXT.HOME_THX_LOGO"
+                            height="18"
+                            class="ml-1"
+                        />
+                    </b-button>
                     <b-button class="rounded-pill ml-3" variant="primary" :href="widgetUrl" target="_blank">
                         <span>Launch App</span>
                     </b-button>

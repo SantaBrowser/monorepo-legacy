@@ -12,17 +12,17 @@
                 <b-card class="bg-dark text-white shadow-lg mb-10 mb-md-0 d-none d-md-flex">
                     <b-card-title>Hi👋</b-card-title>
                     <p>Read about the widget features below and feel free to reach out if you have any questions.</p>
-                    <b-link :to="`/pool/${$route.params.poolId}/developer/general`">
+                    <b-link :to="`/campaign/${$route.params.poolId}/developer/general`">
                         <i class="fas fa-caret-right mr-1" />
                         Add to your HTML page
                     </b-link>
                     <br />
-                    <b-link :to="`/pool/${$route.params.poolId}/settings/appearance`">
+                    <b-link :to="`/campaign/${$route.params.poolId}/settings/appearance`">
                         <i class="fas fa-caret-right mr-1" />
                         Change color theme
                     </b-link>
                     <br />
-                    <b-link :to="`/pool/${$route.params.poolId}/settings/widget`">
+                    <b-link :to="`/campaign/${$route.params.poolId}/settings/widget`">
                         <i class="fas fa-caret-right mr-1" />
                         Change widget settings
                     </b-link>
@@ -180,52 +180,14 @@
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
 import { mapGetters } from 'vuex';
-import { initWidget } from '../utils/widget';
-import { TBrand } from '../store/modules/brands';
-import { API_URL, PUBLIC_URL, WIDGET_URL } from '@thxnetwork/dashboard/config/secrets';
-import { format, formatDistance } from 'date-fns';
-import axios, { AxiosError } from 'axios';
-import { UserManager } from 'oidc-client-ts';
-import { config } from '../utils/oidc';
-import { BASE_URL } from '@thxnetwork/dashboard/config/secrets';
-import { track } from '@thxnetwork/common/mixpanel';
-import BaseCodeExample from '../components/BaseCodeExample.vue';
+import { initWidget } from '@thxnetwork/dashboard/utils/widget';
+import { TBrand } from '@thxnetwork/dashboard/store/modules/brands';
+import { API_URL, WIDGET_URL } from '@thxnetwork/dashboard/config/secrets';
+import { format } from 'date-fns';
 import { contentQuests, contentRewards } from '@thxnetwork/common/constants';
+import axios from 'axios';
 
 @Component({
-    metaInfo() {
-        const { $route } = this as WidgetPreviewView;
-        const { poolId } = $route.params;
-        const previewImage = `${API_URL}/pools/preview/default/${poolId}.png`;
-        const title = this.title + ' | THX Network';
-        const description = 'Web preview of your Quest & Reward campaign.';
-
-        return {
-            title,
-            meta: [
-                { name: 'title', content: title },
-                { vmid: 'description', name: 'description', content: description },
-                { name: 'keywords', content: '' },
-                { name: 'twitter:card', content: this.logoImgUrl },
-                { name: 'twitter:site', content: PUBLIC_URL },
-                { name: 'twitter:creator', content: '@thxprotocol' },
-                { name: 'twitter:title', content: title },
-                { name: 'twitter:description', content: '' },
-                { name: 'twitter:image', content: previewImage },
-                { name: 'twitter:image:alt', content: title },
-                { name: 'og:title', content: title },
-                { name: 'og:description', content: description },
-                { name: 'og:type', content: 'website' },
-                { name: 'og:site_name', content: title },
-                { name: 'og:url', content: this.$route.fullPath },
-                { name: 'og:image', content: previewImage },
-            ],
-            link: [{ rel: 'canonical', href: this.$route.fullPath }],
-        };
-    },
-    components: {
-        BaseCodeExample,
-    },
     computed: mapGetters({
         brands: 'brands/all',
     }),
@@ -234,102 +196,33 @@ export default class WidgetPreviewView extends Vue {
     format = format;
     isTransferLoading = false;
     brands!: { [poolId: string]: TBrand };
-    logoImgUrl = '';
-    backgroundImgUrl = '';
     poolTransfer: TPoolTransferResponse | null = null;
-    defaultLogoImgUrl = require('../../public/assets/logo.png');
-    defaultBackgroundImgUrl = require('../../public/assets/thx_jumbotron.webp');
     error = '';
-    userManager = new UserManager(config);
     contentQuests = contentQuests;
     contentRewards = contentRewards;
     title = '';
     slug = '';
+    logoImgUrl = require('@thxnetwork/dashboard/../public/assets/logo.png');
 
     get campaignUrl() {
         return `${WIDGET_URL}/c/${this.slug}`;
     }
 
-    get isExpired() {
-        if (!this.poolTransfer) return;
-        return this.poolTransfer.expiry && this.poolTransfer.now - new Date(this.poolTransfer.expiry).getTime() > 0;
-    }
-
-    get expiryDate() {
-        if (!this.poolTransfer) return;
-        return !this.isExpired && this.poolTransfer.expiry
-            ? formatDistance(new Date(this.poolTransfer.expiry), new Date(this.poolTransfer.now), {
-                  addSuffix: false,
-              })
-            : 'expired';
-    }
     async mounted() {
-        // Ping mixpanel that the page is visited
-        this.userManager.getUser().then((user) => {
-            track('UserVisits', [user?.profile.sub, 'preview', { poolId: this.$route.params.poolId }]);
-        });
-
         // Inject the widget
         initWidget(this.$route.params.poolId, '#thx-widget-preview');
 
         const { data } = await axios.get(API_URL + '/v1/widget/' + this.$route.params.poolId);
         this.title = data.title;
         this.slug = data.slug;
-        this.logoImgUrl = data.logoUrl || this.defaultLogoImgUrl;
-
-        this.setBackground();
-    }
-
-    setBackground() {
-        const app = document.getElementById('app');
-        if (!app) return;
-        app.style.opacity = '1';
-        document.body.style.height = 'auto';
-        document.body.style.backgroundColor = '#212529';
-        // document.body.style.backgroundSize = 'cover';
-        // document.body.style.backgroundAttachment = 'fixed';
-        // document.body.style.backgroundPosition = 'center center';
-        // document.body.style.backgroundImage = src ? `url('${src}')` : '';
-    }
-
-    async onClickTransfer() {
-        if (!this.poolTransfer) return;
-        this.isTransferLoading = true;
-
-        const user = await this.userManager.getUser();
-        if (!user || user.expired) {
-            await this.$store.dispatch('account/signinRedirect', {
-                poolId: this.poolTransfer.poolId,
-                poolTransferToken: this.poolTransfer.token,
-            });
-            this.isTransferLoading = false;
-            return;
-        }
-
-        try {
-            await axios({
-                method: 'POST',
-                url: `/pools/${this.$route.params.poolId}/transfers`,
-                data: {
-                    sub: user.profile.sub,
-                    token: this.$route.query.token,
-                },
-            });
-
-            window.location.href = `${BASE_URL}/pool/${this.poolTransfer.poolId}`;
-        } catch (error) {
-            this.setError(error as AxiosError);
-        } finally {
-            this.isTransferLoading = false;
-        }
-    }
-
-    setError(error: AxiosError) {
-        this.error = error.response?.data.error.message || 'Something went wrong...';
+        this.logoImgUrl = data.logoUrl ? data.logoUrl : this.logoImgUrl;
     }
 }
 </script>
 <style>
+body {
+    background-color: #212529;
+}
 #app {
     background-size: cover;
     background-repeat: no-repeat;
