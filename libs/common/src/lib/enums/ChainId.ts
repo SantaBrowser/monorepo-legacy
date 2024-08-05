@@ -1,6 +1,7 @@
 export enum ChainId {
     Ethereum = 1,
     Sepolia = 11155111,
+    Skale = 1444673419,
     Arbitrum = 42161,
     BNBChain = 56,
     Hardhat = 31337,
