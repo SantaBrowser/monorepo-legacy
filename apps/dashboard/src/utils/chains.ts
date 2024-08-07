@@ -24,7 +24,7 @@ const chainInfo: { [chainId: number]: ChainInfo } = {
         blockExplorer: 'https://juicy-low-small-testnet.explorer.testnet.skalenodes.com',
     },
     [ChainId.Arbitrum]: {
-        disabled: true,
+        disabled: false,
         chainId: ChainId.Arbitrum,
         name: 'Arbitrum',
         logo: require('@thxnetwork/dashboard/../public/assets/thx_logo_arbitrum.svg'),
@@ -78,6 +78,13 @@ const chainInfo: { [chainId: number]: ChainInfo } = {
         name: 'IOTA EVM',
         logo: require('@thxnetwork/dashboard/../public/assets/thx_logo_iota.svg'),
         blockExplorer: 'https://explorer.evm.iota.org',
+    },
+    [ChainId.Aptos]: {
+        disabled: false,
+        chainId: ChainId.Aptos,
+        name: 'Aptos',
+        logo: require('@thxnetwork/dashboard/../public/assets/thx_logo_iota.svg'),
+        blockExplorer: 'https://explorer.aptoslabs.com',
     },
 };
 
