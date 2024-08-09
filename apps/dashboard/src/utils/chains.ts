@@ -7,20 +7,20 @@ const chainInfo: { [chainId: number]: ChainInfo } = {
         chainId: ChainId.Ethereum,
         name: 'Ethereum',
         logo: require('@thxnetwork/dashboard/../public/assets/thx_logo_ethereum.svg'),
-        blockExplorer: 'https://mumbai.polygonscan.com',
+        blockExplorer: 'https://etherscan.com',
     },
     [ChainId.Sepolia]: {
         disabled: false,
         chainId: ChainId.Sepolia,
         name: 'Sepolia',
-        logo: require('@thxnetwork/dashboard/../public/assets/thx_logo_ethereum.svg'),
+        logo: require('@thxnetwork/dashboard/../public/assets/thx_logo_sepolia.svg'),
         blockExplorer: 'https://sepolia.etherscan.io',
     },
     [ChainId.Skale]: {
         disabled: false,
         chainId: ChainId.Skale,
         name: 'Skale',
-        logo: require('@thxnetwork/dashboard/../public/assets/thx_logo_ethereum.svg'),
+        logo: require('@thxnetwork/dashboard/../public/assets/thx_logo_skale.svg'),
         blockExplorer: 'https://juicy-low-small-testnet.explorer.testnet.skalenodes.com',
     },
     [ChainId.Arbitrum]: {
@@ -28,7 +28,7 @@ const chainInfo: { [chainId: number]: ChainInfo } = {
         chainId: ChainId.Arbitrum,
         name: 'Arbitrum',
         logo: require('@thxnetwork/dashboard/../public/assets/thx_logo_arbitrum.svg'),
-        blockExplorer: 'https://mumbai.polygonscan.com',
+        blockExplorer: 'https://arbiscan.io',
     },
     [ChainId.BNBChain]: {
         disabled: true,
@@ -83,7 +83,7 @@ const chainInfo: { [chainId: number]: ChainInfo } = {
         disabled: false,
         chainId: ChainId.Aptos,
         name: 'Aptos',
-        logo: require('@thxnetwork/dashboard/../public/assets/thx_logo_iota.svg'),
+        logo: require('@thxnetwork/dashboard/../public/assets/thx_logo_aptos.svg'),
         blockExplorer: 'https://explorer.aptoslabs.com',
     },
 };
