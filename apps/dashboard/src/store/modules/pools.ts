@@ -5,6 +5,7 @@ import { track } from '@thxnetwork/common/mixpanel';
 import { prepareFormDataForUpload } from '@thxnetwork/dashboard/utils/uploadFile';
 import { AccountPlanType, ChainId } from '@thxnetwork/common/enums';
 import * as html from 'html-entities';
+import { QuestEntryStatus } from '@thxnetwork/common/enums/QuestEntryStatus';
 
 export interface IPoolAnalyticLeaderBoard {
     _id: string;
@@ -202,6 +203,14 @@ class PoolModule extends VuexModule {
     }) {
         if (!this._entries[poolId]) Vue.set(this._entries, poolId, {});
         Vue.set(this._entries[poolId], questId, result);
+    }
+
+    @Mutation
+    updateQuestEntries({ poolId, questId, entries }: { poolId: string; questId: string; entries: TQuestEntry[] }) {
+        this._entries[poolId][questId].results = this._entries[poolId][questId].results.map((entry) => ({
+            ...entry,
+            ...entries.find((e) => e._id === entry._id),
+        }));
     }
 
     @Mutation
@@ -479,16 +488,35 @@ class PoolModule extends VuexModule {
         data.results = data.results.map((q: TBaseQuest) => {
             q.title = html.decode(q.title);
             q.description = html.decode(q.description);
+            q.expiryDate = q.expiryDate ? new Date(q.expiryDate) : '';
             q.infoLinks = q.infoLinks.map(({ url, label }) => ({
                 label: html.decode(label),
                 url,
             }));
-            q.delete = (quest) => this.context.dispatch('removeQuest', quest);
-            q.update = (quest) => this.context.dispatch('updateQuest', quest);
             return q;
         });
 
         this.context.commit('setQuests', { poolId: pool._id, result: data });
+    }
+
+    @Action({ rawError: true })
+    async sortQuests({ pool, quests, page, limit, isPublished }) {
+        await axios({
+            method: 'POST',
+            url: `/pools/${pool._id}/quests`,
+            data: { quests },
+        });
+        await this.context.dispatch('listQuests', { pool, page, limit, isPublished });
+    }
+
+    @Action({ rawError: true })
+    async listQuestsAll(pool: TPool) {
+        const { data } = await axios({
+            method: 'GET',
+            url: `/pools/${pool._id}/quests`,
+        });
+
+        return data.results;
     }
 
     @Action({ rawError: true })
@@ -498,9 +526,29 @@ class PoolModule extends VuexModule {
             url: `/pools/${payload.poolId}/quests/${payload.variant}/${payload._id}`,
             data: prepareFormDataForUpload(payload),
         });
-        q.delete = (quest) => this.context.dispatch('removeQuest', quest);
-        q.update = (quest) => this.context.dispatch('updateQuest', quest);
         this.context.commit('setQuest', q);
+    }
+
+    @Action({ rawError: true })
+    async updateEntries({
+        quest,
+        entries,
+    }: {
+        quest: TQuest;
+        entries: { entryId: string; state: QuestEntryStatus }[];
+    }) {
+        const { data } = await axios({
+            method: 'PATCH',
+            url: `/pools/${quest.poolId}/quests/${quest.variant}/${quest._id}/entries`,
+            data: {
+                entries: JSON.stringify(entries),
+            },
+        });
+        this.context.commit('updateQuestEntries', {
+            poolId: quest.poolId,
+            questId: quest._id,
+            entries: data,
+        });
     }
 
     @Action({ rawError: true })
