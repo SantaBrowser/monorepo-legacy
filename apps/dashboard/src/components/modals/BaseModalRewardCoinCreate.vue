@@ -45,6 +45,7 @@ import { chainInfo } from '@thxnetwork/dashboard/utils/chains';
 import BaseDropdownSelectERC20 from '../dropdowns/BaseDropdownSelectERC20.vue';
 import BaseDropdownSelectWallet from '../dropdowns/BaseDropdownSelectWallet.vue';
 import BaseModalRewardCreate from './BaseModalRewardCreate.vue';
+import { ChainId } from '@thxnetwork/common/enums';
 
 @Component({
     components: {
@@ -77,12 +78,17 @@ export default class ModalRewardCoinCreate extends Vue {
 
     get balance() {
         if (!this.wallet || !this.erc20 || !this.erc20BalanceList[this.erc20.address]) return '0';
-        return parseUnits(this.erc20BalanceList[this.erc20.address][this.wallet.address as string], 18);
+        return this.erc20BalanceList[this.erc20.address][this.wallet.address as string];
     }
 
     openAddressUrl() {
         if (!this.wallet) return '';
-        const url = `${chainInfo[this.erc20.chainId].blockExplorer}/address/${this.wallet.address}`;
+        let url;
+        if (this.erc20.chainId == ChainId.Aptos) {
+            url = `${chainInfo[this.erc20.chainId].blockExplorer}/account/${this.wallet.address}?network=testnet`;
+        } else {
+            url = `${chainInfo[this.erc20.chainId].blockExplorer}/address/${this.wallet.address}`;
+        }
         return (window as any).open(url, '_blank').focus();
     }
 

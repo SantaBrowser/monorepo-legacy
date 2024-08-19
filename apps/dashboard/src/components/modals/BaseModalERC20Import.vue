@@ -42,7 +42,7 @@
 
         <template #btn-primary>
             <b-button
-                :disabled="loading || !isValidAddress"
+                :disabled="loading"
                 class="rounded-pill"
                 @click="submit()"
                 variant="primary"
@@ -89,7 +89,7 @@ export default class ModalERC20Import extends Vue {
     @Prop() chainId!: ChainId;
 
     get isValidAddress() {
-        return isAddress(this.erc20Address);
+        return true;
     }
 
     async submit() {
@@ -113,7 +113,7 @@ export default class ModalERC20Import extends Vue {
     }
 
     async onInputAddress(address: string) {
-        if (!isAddress(address)) throw new Error('Invalid Contract Address');
+        // if (!isAddress(address)) throw new Error('Invalid Contract Address');
 
         try {
             this.previewLoading = true;
