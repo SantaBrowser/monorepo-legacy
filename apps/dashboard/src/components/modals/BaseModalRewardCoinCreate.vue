@@ -86,7 +86,11 @@ export default class ModalRewardCoinCreate extends Vue {
         let url;
         if (this.erc20.chainId == ChainId.Aptos) {
             url = `${chainInfo[this.erc20.chainId].blockExplorer}/account/${this.wallet.address}?network=testnet`;
-        } else {
+        }
+        else if (this.erc20.chainId == ChainId.Sui) {
+            url = `${chainInfo[this.erc20.chainId].blockExplorer}/account/${this.wallet.address}`;
+        }
+        else {
             url = `${chainInfo[this.erc20.chainId].blockExplorer}/address/${this.wallet.address}`;
         }
         return (window as any).open(url, '_blank').focus();

@@ -86,6 +86,13 @@ const chainInfo: { [chainId: number]: ChainInfo } = {
         logo: require('@thxnetwork/dashboard/../public/assets/thx_logo_aptos.svg'),
         blockExplorer: 'https://explorer.aptoslabs.com',
     },
+    [ChainId.Sui]: {
+        disabled: false,
+        chainId: ChainId.Sui,
+        name: 'Sui',
+        logo: require('@thxnetwork/dashboard/../public/assets/thx_logo_sui.svg'),
+        blockExplorer: 'https://suiscan.xyz/testnet',
+    },
 };
 
 if (process.env.NODE_ENV !== 'production') {

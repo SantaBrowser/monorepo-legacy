@@ -11,5 +11,6 @@ export enum ChainId {
     Metis = 1088,
     Base = 8453,
     IOTA = 8822,
-    Aptos = 1000000001
+    Aptos = 1000000001,
+    Sui = 1000000002
 }
