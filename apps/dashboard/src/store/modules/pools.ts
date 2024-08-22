@@ -311,7 +311,7 @@ class PoolModule extends VuexModule {
     }
     @Mutation
     setWallets(wallets: TWallet[]) {
-        Vue.set(this._wallets, wallets[0].poolId, wallets);
+        Vue.set(this._wallets, wallets[0]?.poolId, wallets);
     }
 
     @Mutation
