@@ -30,6 +30,13 @@ const chainInfo: { [chainId: number]: ChainInfo } = {
         logo: require('@thxnetwork/dashboard/../public/assets/thx_logo_arbitrum.svg'),
         blockExplorer: 'https://arbiscan.io',
     },
+    [ChainId.Optimism]: {
+        disabled: false,
+        chainId: ChainId.Optimism,
+        name: 'Optimism',
+        logo: require('@thxnetwork/dashboard/../public/assets/thx_logo_optimism.svg'),
+        blockExplorer: 'https://optimistic.etherscan.io',
+    },
     [ChainId.BNBChain]: {
         disabled: true,
         chainId: ChainId.BNBChain,
