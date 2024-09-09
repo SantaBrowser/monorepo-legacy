@@ -73,7 +73,7 @@ const chainInfo: { [chainId: number]: ChainInfo } = {
         blockExplorer: 'https://explorer.metis.io',
     },
     [ChainId.Base]: {
-        disabled: true,
+        disabled: false,
         chainId: ChainId.Base,
         name: 'Base',
         logo: require('@thxnetwork/dashboard/../public/assets/thx_logo_base.svg'),
