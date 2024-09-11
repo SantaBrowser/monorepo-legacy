@@ -100,6 +100,13 @@ const chainInfo: { [chainId: number]: ChainInfo } = {
         logo: require('@thxnetwork/dashboard/../public/assets/thx_logo_sui.svg'),
         blockExplorer: 'https://suiscan.xyz/testnet',
     },
+    [ChainId.Solana]: {
+        disabled: false,
+        chainId: ChainId.Solana,
+        name: 'Solana',
+        logo: require('@thxnetwork/dashboard/../public/assets/thx_logo_solana.svg'),
+        blockExplorer: 'https://explorer.solana.com',
+    },
 };
 
 if (process.env.NODE_ENV !== 'production') {

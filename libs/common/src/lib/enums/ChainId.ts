@@ -14,4 +14,5 @@ export enum ChainId {
     IOTA = 8822,
     Aptos = 1000000001,
     Sui = 1000000002,
+    Solana = 1000000003,
 }
