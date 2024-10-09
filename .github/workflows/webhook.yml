@@ -1,4 +1,4 @@
-name: Panel Publish
+name: Webhook
 
 on:
   push:
