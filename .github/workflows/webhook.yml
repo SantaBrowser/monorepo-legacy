@@ -1,0 +1,23 @@
+name: Panel Publish
+
+on:
+  push:
+    branches: [ "merge-branch-latest-sup" ]
+  pull_request:
+    branches: [ "merge-branch-latest-sup" ]
+
+jobs:
+  # You can remove the 'build' job if you no longer require it
+  # Or alternatively, you could leave the job but it wouldn't be triggered unless you also set the same branch condition
+
+  redeploy:
+    name: Server redeploy webhook call
+    runs-on: ubuntu-latest
+    # Remove the 'needs' if you're not relying on the 'build' job anymore
+    # needs: [build]
+    steps:
+      - name: Deploy docker container webhook on k8s
+        uses: joelwmale/webhook-action@master
+        env:
+          WEBHOOK_URL: https://webhook.monorepo.santabrowser.com/legacy-redeploy # Use secrets as appropriate
+          data: "{ 'redeploy': true }"
