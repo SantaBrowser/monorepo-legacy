@@ -16,8 +16,13 @@ jobs:
     # Remove the 'needs' if you're not relying on the 'build' job anymore
     # needs: [build]
     steps:
-      - name: Deploy docker container webhook on k8s
+      - name: Deploy stage
         uses: joelwmale/webhook-action@master
         env:
           WEBHOOK_URL: https://webhook.monorepo.santabrowser.com/legacy-redeploy # Use secrets as appropriate
+          data: "{ 'redeploy': true }"
+      - name: Deploy prod 
+        uses: joelwmale/webhook-action@master
+        env:
+          WEBHOOK_URL: https://webhook.monorepo.aws.santabrowser.com/legacy-redeploy # Use secrets as appropriate
           data: "{ 'redeploy': true }"
