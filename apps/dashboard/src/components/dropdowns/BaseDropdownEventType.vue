@@ -2,7 +2,7 @@
     <b-dropdown
         variant="light"
         class="w-100"
-        menu-class="w-100"
+        menu-class="w-100 events-wrap"
         toggle-class="justify-content-between align-items-center d-flex form-control"
     >
         <template #button-content>
@@ -43,3 +43,9 @@ export default class BaseDropdownEventType extends Vue {
     }
 }
 </script>
+<style lang="scss">
+.events-wrap {
+    height: 400px;
+    overflow: auto;
+}
+</style>
