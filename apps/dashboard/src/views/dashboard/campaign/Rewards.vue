@@ -182,6 +182,8 @@ import BaseCardTableHeader from '@thxnetwork/dashboard/components/cards/BaseCard
 import BaseModalQRCodes from '@thxnetwork/dashboard/components/modals/BaseModalQRCodes.vue';
 import BaseButtonRewardPayments from '@thxnetwork/dashboard/components/buttons/BaseButtonRewardPayments.vue';
 import BaseModalDelete from '@thxnetwork/dashboard/components/modals/BaseModalDelete.vue';
+import BaseModalRewardKanaLabsCreate from '@thxnetwork/dashboard/components/modals/BaseModalRewardKanaLabsCreate.vue';
+import ModalRewardKanaLabsCreate from '@thxnetwork/dashboard/components/modals/BaseModalRewardKanaLabsCreate.vue';
 
 @Component({
     components: {
@@ -194,6 +196,7 @@ import BaseModalDelete from '@thxnetwork/dashboard/components/modals/BaseModalDe
         BaseCardTableHeader,
         BaseModalQRCodes,
         BaseModalDelete,
+        BaseModalRewardKanaLabsCreate,
     },
     computed: mapGetters({
         rewards: 'pools/rewards',
@@ -219,6 +222,7 @@ export default class RewardsView extends Vue {
         [RewardVariant.Custom]: 'BaseModalRewardCustomCreate',
         [RewardVariant.Coupon]: 'BaseModalRewardCouponCreate',
         [RewardVariant.DiscordRole]: 'BaseModalRewardDiscordRoleCreate',
+        [RewardVariant.KanaLabs]: 'BaseModalRewardKanaLabsCreate',
     };
     rewardIconClassMap = {
         [RewardVariant.Coin]: 'fas fa-coins',
@@ -226,6 +230,7 @@ export default class RewardsView extends Vue {
         [RewardVariant.Custom]: 'fas fa-gift',
         [RewardVariant.Coupon]: 'fas fa-tags',
         [RewardVariant.DiscordRole]: 'fab fa-discord',
+        [RewardVariant.KanaLabs]: 'fas fa-coins',
     };
     rewards!: TRewardState;
 
